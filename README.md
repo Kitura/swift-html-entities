@@ -1,9 +1,11 @@
 # HTMLEntities
-HTML character escape utility tool for Swift. Currently includes support for HTML4 named character references. You can find the list of all 252 HTML4 named character references [here](https://www.w3.org/TR/html4/sgml/entities.html).
+Pure Swift HTML character escape utility tool for Swift 3.0.
+
+Currently includes support for HTML4 named character references. You can find the list of all 252 HTML4 named character references [here](https://www.w3.org/TR/html4/sgml/entities.html).
 
 `HTMLEntities` escapes ALL non-ASCII characters, as well as the characters `<`, `>`, `&`, `”`, `’` as these five characters are part of the HTML tag and HTML attribute syntaxes.
 
-In additional, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML4 named character reference escapes. **NOTE:** The full set of HTML5 named character references is not yet supported.
+In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML4 named character reference escapes. **NOTE:** The full set of HTML5 named character references is not yet supported. Only HTML4 named character references are supported.
 
 ## Usage
 
@@ -31,7 +33,7 @@ print(htmlencoded.htmlUnescape())
 
 #### `decimal`
 
-Defaults to `false`. Specifies if decimal character escapes should be used instead of hexadecimal character escapes whenever numeric character escape is used (i.e., does not affect named character references escapes). Using hexadecimal character escapes is recommended.
+Defaults to `false`. Specifies if decimal character escapes should be used instead of hexadecimal character escapes whenever numeric character escape is used (i.e., does not affect named character references escapes). The use of hexadecimal character escapes is recommended.
 
 ```swift
 import HTMLEntities
@@ -47,7 +49,7 @@ print(text.htmlEscape(decimal: true))
 
 #### `useNamedReferences`
 
-Defaults to `true`. Specifies if named character references should be used whenever possible. Set to `false` to always use numeric character escape, i.e., for compatibility with older browsers.
+Defaults to `true`. Specifies if named character references should be used whenever possible. Set to `false` to always use numeric character escape, i.e., for compatibility with older browsers that do not recognize named character references.
 
 ```swift
 import HTMLEntities
@@ -65,7 +67,7 @@ print(html.htmlEscape(userNamedReferences: false))
 
 #### `strict`
 
-Defaults to `true`. Specifies if HTML numeric character escapes MUST always end with `;`. Some browsers allow numeric character escapes (decimal and hexadecimal) to end without `;`. Always ending character escapes with `;` is recommended; however, for compatibility reasons, `HTMLEntities` allows non-strict ending for situations that require it.
+Defaults to `true`. Specifies if HTML numeric character escapes MUST always end with `;`. Some browsers allow numeric character escapes (i.e., decimal and hexadecimal types) to end without `;`. Always ending character escapes with `;` is recommended; however, for compatibility reasons, `HTMLEntities` allows non-strict ending option for situations that require it.
 
 ```swift
 import HTMLEntities
