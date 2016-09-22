@@ -15,23 +15,19 @@
  */
 
 /// This String extension provides utility functions to convert strings to their
-/// HTML named character entity equivalents and vice versa. Named character
-/// entities are often used to mitigate XSS attacks that, for example, inject
-/// scripts into web pages.
+/// HTML escaped equivalents and vice versa.
 public extension String {
-    /// Return string as HTML escaped by replacing certain characters with their
-    /// HTML named character entity equivalents.
-    /// For example, this function turns
-    /// `"<script>alert(\"abc\")</script>"`
-    /// into
+    /// Return string as HTML escaped by replacing non-ASCII and unsafe characters
+    /// with their numeric character escapes, or if such exists, their HTML named
+    /// character reference equivalents. For example, this function turns
+    /// `"<script>alert("abc")</script>"` into
     /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
     /// - parameter decimal: Specifies if decimal escapes should be used.
     /// *Optional*. Defaults to `false`.
     /// - parameter useNamedReferences: Specifies if named character references
     /// should be used whenever possible. *Optional*. Defaults to `true`.
-    public func htmlEscape(
-        decimal: Bool = false,
-        useNamedReferences: Bool = true) -> String {
+    public func htmlEscape(decimal: Bool = false, useNamedReferences: Bool = true)
+        -> String {
         let unicodes = self.unicodeScalars
 
         // result buffer
@@ -47,7 +43,6 @@ public extension String {
 
             if useNamedReferences,
                 let entity = html4NamedCharactersEncodeMap[unicode] {
-                // lazy append since string append may require memory reallocation
                 // move unbuffered characters over to the result buffer
                 str.append(String(unicodes[leftIndex..<currentIndex]))
 
@@ -62,7 +57,6 @@ public extension String {
                 || unicode.isAttributeSyntax {
                 // unicode is not a named character, and is either
                 // not an ASCII character, or is an unsafe ASCII character
-                // lazy append since string append may require memory reallocation
                 // move unbuffered characters over to the result buffer
                 str.append(String(unicodes[leftIndex..<currentIndex]))
 
@@ -116,6 +110,7 @@ public extension String {
         var currentIndex = leftIndex
         var ampersandIndex = unicodes.endIndex
 
+        // closure for resetting parse state to its original state
         let reset = {
             entity = ""
             state = .Invalid
@@ -138,7 +133,7 @@ public extension String {
                     ampersandIndex = currentIndex
                 }
             case .Unknown:
-                // parsed an & unicode,
+                // parsed an & unicode
                 // need to determine type of entity
                 if unicode.isHash {
                     // entity can only be a number type
@@ -147,14 +142,20 @@ public extension String {
                 else if unicode.isAlpha {
                     // entity can only be named character reference type
                     state = .Named
-                    entity.append(String(unicodes[currentIndex]))
+
+                    // walk back one unicode
+                    nextIndex = currentIndex
+                }
+                else if unicode.isAmpersand {
+                    // parsed & again, ignore the previous one
+                    ampersandIndex = currentIndex
                 }
                 else {
                     // false alarm, not an entity; reset state
                     reset()
                 }
             case .Number:
-                // parsed a # unicode,
+                // parsed a # unicode
                 // need to determine dec or hex
                 if unicode.isX {
                     // entity can only be hexadecimal type
@@ -163,12 +164,29 @@ public extension String {
                 else if unicode.isNumeral {
                     // entity can only be decimal type
                     state = .Dec
-                    entity.append(String(unicodes[currentIndex]))
+
+                    // walk back one unicode
+                    nextIndex = currentIndex
+                }
+                else if unicode.isAmpersand {
+                    // parsed & again, ignore the previous one
+                    state = .Unknown
+                    ampersandIndex = currentIndex
                 }
                 else {
+                    // false alarm, not an entity; reset state
                     reset()
                 }
             case .Dec, .Hex, .Named:
+                if unicode.isAmpersand {
+                    // parsed & again, ignore the previous one
+                    state = .Unknown
+                    ampersandIndex = currentIndex
+                    entity = ""
+
+                    break
+                }
+
                 // lookahead one unicode to help decide next action
                 let lookahead: UInt32? = nextIndex == unicodes.endIndex
                     ? nil : unicodes[nextIndex].value
@@ -198,7 +216,7 @@ public extension String {
                 if isEndOfEntity {
                     if let lookahead = lookahead, lookahead.isSemicolon {
                         // consume the ; by moving nextIndex by one so that
-                        ///nextIndex is pointing to the unicode after the ;
+                        // nextIndex is pointing to the unicode after the ;
                         nextIndex = unicodes.index(after: nextIndex)
 
                         if state == .Named {

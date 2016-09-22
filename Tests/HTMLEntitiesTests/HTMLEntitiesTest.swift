@@ -68,8 +68,12 @@ class HTMLEntitiesTests: XCTestCase {
         XCTAssertEqual(noSemicolonEnding.htmlUnescape(), noSemicolonEnding)
         XCTAssertEqual(noSemicolonEnding.htmlUnescape(strict: false), "한")
 
-        let badentity = "&undefined;"
-        XCTAssertEqual(badentity.htmlUnescape(), badentity)
+        let mixedEnding = "&#4370&#4449;&#4523"
+        XCTAssertEqual(mixedEnding.htmlUnescape(), "&#4370ᅡ&#4523")
+        XCTAssertEqual(mixedEnding.htmlUnescape(strict: false), "한")
+
+        let undefinedNameReference = "&undefined;"
+        XCTAssertEqual(undefinedNameReference.htmlUnescape(), undefinedNameReference)
 
         let missingsemicolon = "some text here &quot some more text here"
         XCTAssertEqual(missingsemicolon.htmlUnescape(), missingsemicolon)
@@ -80,6 +84,23 @@ class HTMLEntitiesTests: XCTestCase {
         let simpleString = "abcdefghijklmnopqrstuvwxyz1234567890"
         XCTAssertEqual(simpleString.htmlEscape(), simpleString)
         XCTAssertEqual(simpleString.htmlUnescape(), simpleString)
+
+        let fakeIt1 = "&&#x223E;&#x333;"
+        XCTAssertEqual(fakeIt1.htmlUnescape(), "&∾̳")
+
+        let fakeIt2 = "&#&#x223E;&#x333;"
+        XCTAssertEqual(fakeIt2.htmlUnescape(), "&#∾̳")
+
+        let fakeIt3 = "&lt&#x223E;&#x333;"
+        XCTAssertEqual(fakeIt3.htmlUnescape(), "&lt∾̳")
+
+        let fakeIt4 = "&#123&#x223E;&#x333;"
+        XCTAssertEqual(fakeIt4.htmlUnescape(), "&#123∾̳")
+        XCTAssertEqual(fakeIt4.htmlUnescape(strict: false), "{∾̳")
+
+        let fakeIt5 = "&#xABC&#x223E;&#x333;"
+        XCTAssertEqual(fakeIt5.htmlUnescape(), "&#xABC∾̳")
+        XCTAssertEqual(fakeIt5.htmlUnescape(strict: false), "઼∾̳")
     }
 
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {
