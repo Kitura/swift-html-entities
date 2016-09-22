@@ -33,6 +33,18 @@ let str3Unescaped = "Jako efektivnější se nám jeví pořádání tzv. Road S
 let str3Escaped = "Jako efektivn&#x11B;j&#x161;&#xED; se n&#xE1;m jev&#xED; po&#x159;&#xE1;d&#xE1;n&#xED; tzv. Road Show prost&#x159;ednictv&#xED;m na&#x161;ich autorizovan&#xFD;ch dealer&#x16F; v &#x10C;ech&#xE1;ch a na Morav&#x11B;, kter&#xE9; prob&#x11B;hnou v pr&#x16F;b&#x11B;hu z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna."
 
 class HTMLEntitiesTests: XCTestCase {
+    func testNamedCharacterReferences() {
+        XCTAssertEqual(html4NamedCharactersDecodeMap.count, html4NamedCharactersEncodeMap.count)
+
+        for (reference, unicode) in html4NamedCharactersDecodeMap {
+            let unescaped = String(UnicodeScalar(unicode)!)
+            let escaped = reference
+
+            XCTAssertEqual(unescaped.htmlEscape(), escaped)
+            XCTAssertEqual(escaped.htmlUnescape(), unescaped)
+        }
+    }
+
     func testEncode() {
         XCTAssertEqual(str1Unescaped.htmlEscape(), str1Escaped)
         XCTAssertEqual(str2Unescaped.htmlEscape(), str2Escaped)
@@ -105,6 +117,7 @@ class HTMLEntitiesTests: XCTestCase {
 
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {
         return [
+            ("testNamedCharacterReferences", testNamedCharacterReferences),
             ("testEncode", testEncode),
             ("testDecode", testDecode),
             ("testInvertibility", testInvertibility),

@@ -27,9 +27,9 @@ func invert<K, V: Hashable>(_ dict: [K: V]) -> [V: K] {
 }
 
 extension UInt32 {
-    var isAlpha: Bool {
-        // ASCII values of [A-Z] and [a-z]
-        return 65...90 ~= self || 97...122 ~= self
+    var isAlphaNumeric: Bool {
+        // ASCII values of [0-9], [A-Z0, [and [a-z]
+        return self.isNumeral || 65...90 ~= self || 97...122 ~= self
     }
 
     var isAmpersand: Bool {
@@ -86,7 +86,7 @@ extension UInt32 {
         case .Hex:
             return self.isHexNumeral
         case .Named:
-            return self.isAlpha
+            return self.isAlphaNumeric
         default:
             return false
         }
