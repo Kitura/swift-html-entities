@@ -97,9 +97,12 @@ public extension String {
         let unicodes = self.unicodeScalars
 
         // result buffer
-        var str: String = ""
+        var str: String? = nil
 
         // entity buffer
+        // use optional string since there are issues on Linux when checking
+        // again empty string, i.e., "\u{200C}" == "" is true; "\u{200C}" is
+        // the named character &zwnj;
         var entity: String = ""
 
         // current parse state
@@ -139,7 +142,7 @@ public extension String {
                     // entity can only be a number type
                     state = .Number
                 }
-                else if unicode.isAlpha {
+                else if unicode.isAlphaNumeric {
                     // entity can only be named character reference type
                     state = .Named
 
@@ -241,10 +244,12 @@ public extension String {
                         let unicodeScalar = UnicodeScalar(code) {
                         // reached end of entity
                         // move unbuffered unicodes over to the result buffer
-                        str.append(String(unicodes[leftIndex..<ampersandIndex]))
+                        str = str == nil ? "" : str
+
+                        str?.append(String(unicodes[leftIndex..<ampersandIndex]))
 
                         // append unescaped character to result buffer
-                        str.append(Character(unicodeScalar))
+                        str?.append(Character(unicodeScalar))
 
                         // move left index since we have buffered everything
                         // up to and including the current entity
@@ -260,16 +265,14 @@ public extension String {
             // move currentIndex to the position of the next unicode to be consumed
             currentIndex = nextIndex
         }
-        
-        if str == "" {
-            // no unescapable entity found
-            // return string as it is
-            return self
+
+        if var str = str {
+            // append rest of string to result buffer
+            str.append(String(unicodes[leftIndex..<unicodes.endIndex]))
+
+            return str
         }
-        
-        // append rest of string to result buffer
-        str.append(String(unicodes[leftIndex..<unicodes.endIndex]))
-        
-        return str
+
+        return self
     }
 }
