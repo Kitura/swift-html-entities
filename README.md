@@ -1,11 +1,29 @@
-# HTMLEntities
+#**HTMLEntities**
+
+[![Build Status - Master](https://api.travis-ci.org/IBM-Swift/swift-html-entities.svg?branch=master)](https://travis-ci.org/IBM-Swift/swift-html-entities)
+![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
+![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
+![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
+
+## Summary
 Pure Swift HTML character escape utility tool for Swift 3.0.
 
 Currently includes support for HTML4 named character references. You can find the list of all 252 HTML4 named character references [here](https://www.w3.org/TR/html4/sgml/entities.html).
 
 `HTMLEntities` escapes ALL non-ASCII characters, as well as the characters `<`, `>`, `&`, `”`, `’` as these five characters are part of the HTML tag and HTML attribute syntaxes.
 
-In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML4 named character reference escapes. **NOTE:** The full set of HTML5 named character references is not yet supported. Only HTML4 named character references are supported.
+In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML4 named character reference escapes.
+
+## Features
+
+* Supports HTML4 named character references (`nbsp`, `cent`, etc.)
+* Supports decimal and hexadecimal escapes for non-named characters
+* Simple to use as functions are added by way of extending the default `String` class
+* Minimal dependencies; implementation is completely self-contained
+
+## Swift Version
+
+HTMLEntities 1.0 runs on Swift 3.0, on both macOS and Ubuntu Linux.
 
 ## Usage
 
