@@ -230,10 +230,23 @@ public extension String {
                     var code: UInt32? = nil
 
                     switch state {
-                    case .Dec:
-                        code = UInt32(entity, radix: 10)
-                    case .Hex:
-                        code = UInt32(entity, radix: 16)
+                    case .Dec, .Hex:
+                        let radix = state == .Dec ? 10 : 16
+
+                        code = UInt32(entity, radix: radix)
+
+                        if let c = code {
+                            if c.isReplacementCharacterEquivalent {
+                                code = replacementCharacterAsUInt32
+                            }
+                            else {
+                                code = htmlSpecialNumericDecodeMap[c] ?? code
+                            }
+                        }
+                        else {
+                            // code is invalid anyway, let's replace it with 0xFFFD
+                            code = replacementCharacterAsUInt32
+                        }
                     case .Named:
                         code = html4NamedCharactersDecodeMap["&" + entity]
                     default:

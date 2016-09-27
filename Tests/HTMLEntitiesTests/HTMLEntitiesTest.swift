@@ -20,6 +20,8 @@
 import XCTest
 @testable import HTMLEntities
 
+let replacementCharacterAsString = "\u{FFFD}"
+
 /// HTML snippet
 let str1Unescaped = "<script>alert(\"abc\")</script>"
 let str1Escaped = "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
@@ -43,6 +45,23 @@ class HTMLEntitiesTests: XCTestCase {
             XCTAssertEqual(unescaped.htmlEscape(), escaped)
             XCTAssertEqual(escaped.htmlUnescape(), unescaped)
         }
+    }
+
+    func testSpecialNumericCharacters() {
+        for (left, right) in htmlSpecialNumericDecodeMap {
+            let decEscaped = "&#" + String(left) + ";"
+            let hexEscaped = "&#x" + String(left, radix: 16) + ";"
+            let unescaped = String(UnicodeScalar(right)!)
+
+            XCTAssertEqual(decEscaped.htmlUnescape(), unescaped)
+            XCTAssertEqual(hexEscaped.htmlUnescape(), unescaped)
+        }
+
+        XCTAssertEqual("&#xD800;".htmlUnescape(), replacementCharacterAsString)
+        XCTAssertEqual("&#xDABC;".htmlUnescape(), replacementCharacterAsString)
+        XCTAssertEqual("&#xDFFF;".htmlUnescape(), replacementCharacterAsString)
+        XCTAssertEqual("&#x110000;".htmlUnescape(), replacementCharacterAsString)
+        XCTAssertEqual("&#xFFFFFF;".htmlUnescape(), replacementCharacterAsString)
     }
 
     func testEncode() {
@@ -118,6 +137,7 @@ class HTMLEntitiesTests: XCTestCase {
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {
         return [
             ("testNamedCharacterReferences", testNamedCharacterReferences),
+            ("testSpecialNumericCharacters", testSpecialNumericCharacters),
             ("testEncode", testEncode),
             ("testDecode", testDecode),
             ("testInvertibility", testInvertibility),
