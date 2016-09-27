@@ -63,6 +63,12 @@ extension UInt32 {
         return 48...57 ~= self
     }
 
+    /// https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+    var isReplacementCharacterEquivalent: Bool {
+        // UTF32 values of [0xD800-0xDFFF], (0x10FFFF-∞]
+        return 55296...57343 ~= self || 1114111 < self
+    }
+
     var isSemicolon: Bool {
         // ASCII value of ;
         return self == 59
