@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+// Linux toolchain requires Foundation to resolve `String` class's `hasSuffix()` function
+#if os(Linux)
+import Foundation
+#endif
+
 /// Replacement character U+FFFD
 let replacementCharacterAsUInt32: UInt32 = 0xFFFD
 
