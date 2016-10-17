@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/// Generated from the list of HTML4 entities here:
-/// https://www.w3.org/TR/html4/sgml/entities.html
-
 import XCTest
 @testable import HTMLEntities
 
@@ -27,121 +24,336 @@ let str1Unescaped = "<script>alert(\"abc\")</script>"
 let str1Escaped = "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
 
 /// Extended grapheme clusters with combined unicode scalars
-let str2Unescaped = "한, 한, é, é, 🇺🇸"
-let str2Escaped = "&#x1112;&#x1161;&#x11AB;, &#xD55C;, e&#x301;, &eacute;, &#x1F1FA;&#x1F1F8;"
+let str2Unescaped = "한, 한, ế, ế, 🇺🇸"
+let str2Escaped = "&#x1112;&#x1161;&#x11AB;, &#xD55C;, &#x1EBF;, e&#x302;&#x301;, &#x1F1FA;&#x1F1F8;"
 
 /// Text with non-ASCII characters
 let str3Unescaped = "Jako efektivnější se nám jeví pořádání tzv. Road Show prostřednictvím našich autorizovaných dealerů v Čechách a na Moravě, které proběhnou v průběhu září a října."
-let str3Escaped = "Jako efektivn&#x11B;j&#x161;&#xED; se n&#xE1;m jev&#xED; po&#x159;&#xE1;d&#xE1;n&#xED; tzv. Road Show prost&#x159;ednictv&#xED;m na&#x161;ich autorizovan&#xFD;ch dealer&#x16F; v &#x10C;ech&#xE1;ch a na Morav&#x11B;, kter&#xE9; prob&#x11B;hnou v pr&#x16F;b&#x11B;hu z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna."
+let str3Escaped = "Jako efektivn&ecaron;j&scaron;&iacute; se n&aacute;m jev&iacute; po&rcaron;&aacute;d&aacute;n&iacute; tzv. Road Show prost&rcaron;ednictv&iacute;m na&scaron;ich autorizovan&yacute;ch dealer&uring; v &Ccaron;ech&aacute;ch a na Morav&ecaron;, kter&eacute; prob&ecaron;hnou v pr&uring;b&ecaron;hu z&aacute;&rcaron;&iacute; a &rcaron;&iacute;jna."
 
 class HTMLEntitiesTests: XCTestCase {
     func testNamedCharacterReferences() {
-        XCTAssertEqual(html4NamedCharactersDecodeMap.count, html4NamedCharactersEncodeMap.count)
+#if os(Linux)
+        XCTAssertEqual(namedCharactersEncodeMap.count, 1367)
+#else
+        XCTAssertEqual(namedCharactersEncodeMap.count, 1509)
+#endif
 
-        for (reference, unicode) in html4NamedCharactersDecodeMap {
-            let unescaped = String(UnicodeScalar(unicode)!)
-            let escaped = reference
+        XCTAssertEqual(specialNamedCharactersDecodeMap.count, 2)
+        XCTAssertEqual(legacyNamedCharactersDecodeMap.count, 106)
+        XCTAssertEqual(namedCharactersDecodeMap.count, 2123)
 
-            XCTAssertEqual(unescaped.htmlEscape(), escaped)
+        // make sure regular named character references can be escaped/unescaped
+        for (character, reference) in namedCharactersEncodeMap {
+            let unescaped = String(character)
+            let escaped = "&" + reference
+
+            XCTAssertEqual(try escaped.htmlUnescape(strict: true), unescaped)
+        }
+
+        // make sure legacy named character references can be unescaped in nonstrict mode,
+        // and that the correct ParseError is thrown in strict mode
+        for (reference, character) in legacyNamedCharactersDecodeMap {
+            let unescaped = String(character)
+            let escaped = "&" + reference
+
             XCTAssertEqual(escaped.htmlUnescape(), unescaped)
+
+            do {
+                _ = try escaped.htmlUnescape(strict: true)
+                XCTAssert(false)
+            }
+            catch ParseError.MissingSemicolon {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
+        }
+
+        // make sure the two special named character references can be unescaped
+        for (reference, string) in specialNamedCharactersDecodeMap {
+            let unescaped = string
+            let escaped = "&" + reference
+
+            XCTAssertEqual(try escaped.htmlUnescape(strict: true), unescaped)
         }
     }
 
-    func testSpecialNumericCharacters() {
-        for (left, right) in htmlSpecialNumericDecodeMap {
-            let decEscaped = "&#" + String(left) + ";"
-            let hexEscaped = "&#x" + String(left, radix: 16) + ";"
+    func testNumericCharacterReferences() {
+        XCTAssertEqual(deprecatedNumericDecodeMap.count, 28)
+        XCTAssertEqual(disallowedNumericReferences.count, 94)
+
+        // make sure the deprecated numeric references can be correctly unescaped in
+        // nonstrict mode, and that the correct ParseError is thrown in strict mode
+        for (left, right) in deprecatedNumericDecodeMap {
             let unescaped = String(UnicodeScalar(right)!)
+            var decEscaped = "&#" + String(left)
+            var hexEscaped = "&#x" + String(left, radix: 16)
 
             XCTAssertEqual(decEscaped.htmlUnescape(), unescaped)
             XCTAssertEqual(hexEscaped.htmlUnescape(), unescaped)
+
+            decEscaped += ";"
+            hexEscaped += ";"
+
+            do {
+                _ = try decEscaped.htmlUnescape(strict: true)
+                XCTAssert(false)
+            }
+            catch ParseError.DeprecatedNumericReference {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
+
+            do {
+                _ = try hexEscaped.htmlUnescape(strict: true)
+                XCTAssert(false)
+            }
+            catch ParseError.DeprecatedNumericReference {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
         }
 
-        XCTAssertEqual("&#xD800;".htmlUnescape(), replacementCharacterAsString)
-        XCTAssertEqual("&#xDABC;".htmlUnescape(), replacementCharacterAsString)
-        XCTAssertEqual("&#xDFFF;".htmlUnescape(), replacementCharacterAsString)
-        XCTAssertEqual("&#x110000;".htmlUnescape(), replacementCharacterAsString)
-        XCTAssertEqual("&#xFFFFFF;".htmlUnescape(), replacementCharacterAsString)
+        // make sure invalid ranges of unicode characters can be correctly unescaped
+        // into U+FFFD in nonstrict mode, and that the correct ParseError is thrown
+        // in strict mode
+        func testReplacementCharacter(_ code: UInt64) {
+            var decEscaped = "&#" + String(code)
+            var hexEscaped = "&#x" + String(code, radix: 16)
+
+            XCTAssertEqual(decEscaped.htmlUnescape(), replacementCharacterAsString)
+            XCTAssertEqual(hexEscaped.htmlUnescape(), replacementCharacterAsString)
+
+            decEscaped += ";"
+            hexEscaped += ";"
+
+            do {
+                _ = try decEscaped.htmlUnescape(strict: true)
+                XCTAssert(false)
+            }
+            catch ParseError.OutsideValidUnicodeRange {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
+
+            do {
+                _ = try hexEscaped.htmlUnescape(strict: true)
+            }
+            catch ParseError.OutsideValidUnicodeRange {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
+        }
+
+        testReplacementCharacter(0xD800)
+        testReplacementCharacter(0xDDDD)
+        testReplacementCharacter(0xDFFF)
+        testReplacementCharacter(0x10FFFF + 1)
+        testReplacementCharacter(0xDDDDDD)
+        testReplacementCharacter(UInt64(UInt32.max))
+        testReplacementCharacter(0xDDDDDDDDDD)
+
+        // make sure the disallowed numeric references can be correctly unescaped in
+        // nonstrict mode, and that the correct ParseError is thrown in strict mode
+        for unicode in disallowedNumericReferences.keys {
+            let unescaped = String(UnicodeScalar(unicode)!)
+            var decEscaped = "&#" + String(unicode)
+            var hexEscaped = "&#x" + String(unicode, radix: 16)
+
+            XCTAssertEqual(decEscaped.htmlUnescape(), unescaped)
+            XCTAssertEqual(hexEscaped.htmlUnescape(), unescaped)
+
+            decEscaped += ";"
+            hexEscaped += ";"
+
+            do {
+                _ = try decEscaped.htmlUnescape(strict: true)
+                XCTAssert(false)
+            }
+            catch ParseError.DisallowedNumericReference {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
+
+            do {
+                _ = try hexEscaped.htmlUnescape(strict: true)
+                XCTAssert(false)
+            }
+            catch ParseError.DisallowedNumericReference {
+                XCTAssert(true)
+            }
+            catch {
+                XCTAssert(false)
+            }
+        }
     }
 
     func testEncode() {
         XCTAssertEqual(str1Unescaped.htmlEscape(), str1Escaped)
         XCTAssertEqual(str2Unescaped.htmlEscape(), str2Escaped)
-        XCTAssertEqual(str3Unescaped.htmlEscape(useNamedReferences: false), str3Escaped)
+        XCTAssertEqual(str3Unescaped.htmlEscape(), str3Escaped)
     }
 
     func testDecode() {
-        XCTAssertEqual(str1Escaped.htmlUnescape(), str1Unescaped)
-        XCTAssertEqual(str2Escaped.htmlUnescape(), str2Unescaped)
-        XCTAssertEqual(str3Escaped.htmlUnescape(), str3Unescaped)
+        XCTAssertEqual(try str1Escaped.htmlUnescape(strict: true), str1Unescaped)
+        XCTAssertEqual(try str2Escaped.htmlUnescape(strict: true), str2Unescaped)
+        XCTAssertEqual(try str3Escaped.htmlUnescape(strict: true), str3Unescaped)
     }
 
     func testInvertibility() {
-        XCTAssertEqual(str1Unescaped.htmlEscape().htmlUnescape(), str1Unescaped)
-        XCTAssertEqual(str1Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(), str1Unescaped)
-        XCTAssertEqual(str1Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(), str1Unescaped)
+        XCTAssertEqual(try str1Unescaped.htmlEscape().htmlUnescape(strict: true), str1Unescaped)
+        XCTAssertEqual(try str1Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(strict: true), str1Unescaped)
+        XCTAssertEqual(try str1Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(strict: true), str1Unescaped)
 
-        XCTAssertEqual(str2Unescaped.htmlEscape().htmlUnescape(), str2Unescaped)
-        XCTAssertEqual(str2Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(), str2Unescaped)
-        XCTAssertEqual(str2Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(), str2Unescaped)
+        XCTAssertEqual(try str2Unescaped.htmlEscape().htmlUnescape(strict: true), str2Unescaped)
+        XCTAssertEqual(try str2Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(strict: true), str2Unescaped)
+        XCTAssertEqual(try str2Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(strict: true), str2Unescaped)
 
-        XCTAssertEqual(str2Unescaped.htmlEscape().htmlUnescape(), str2Unescaped)
-        XCTAssertEqual(str3Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(), str3Unescaped)
-        XCTAssertEqual(str3Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(), str3Unescaped)
+        XCTAssertEqual(try str3Unescaped.htmlEscape().htmlUnescape(strict: true), str3Unescaped)
+        XCTAssertEqual(try str3Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(strict: true), str3Unescaped)
+        XCTAssertEqual(try str3Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(strict: true), str3Unescaped)
     }
 
     func testEdgeCases() {
-        let emptyString = ""
-        XCTAssertEqual(emptyString.htmlEscape(), emptyString)
-        XCTAssertEqual(emptyString.htmlUnescape(), emptyString)
-
-        let noSemicolonEnding = "&#4370&#4449&#4523"
-        XCTAssertEqual(noSemicolonEnding.htmlUnescape(), noSemicolonEnding)
-        XCTAssertEqual(noSemicolonEnding.htmlUnescape(strict: false), "한")
-
-        let mixedEnding = "&#4370&#4449;&#4523"
-        XCTAssertEqual(mixedEnding.htmlUnescape(), "&#4370ᅡ&#4523")
-        XCTAssertEqual(mixedEnding.htmlUnescape(strict: false), "한")
-
-        let undefinedNameReference = "&undefined;"
-        XCTAssertEqual(undefinedNameReference.htmlUnescape(), undefinedNameReference)
-
-        let missingsemicolon = "some text here &quot some more text here"
-        XCTAssertEqual(missingsemicolon.htmlUnescape(), missingsemicolon)
-
-        let embeddedentity = "&some &text; here &lt;script&gt; some more; text here;"
-        XCTAssertEqual(embeddedentity.htmlUnescape(), "&some &text; here <script> some more; text here;")
+        XCTAssertEqual("".htmlEscape(), "")
+        XCTAssertEqual(try "".htmlUnescape(strict: true), "")
 
         let simpleString = "abcdefghijklmnopqrstuvwxyz1234567890"
         XCTAssertEqual(simpleString.htmlEscape(), simpleString)
-        XCTAssertEqual(simpleString.htmlUnescape(), simpleString)
+        XCTAssertEqual(try simpleString.htmlUnescape(strict: true), simpleString)
 
-        let fakeIt1 = "&&#x223E;&#x333;"
-        XCTAssertEqual(fakeIt1.htmlUnescape(), "&∾̳")
+        XCTAssertEqual("&#4370&#4449;&#4523".htmlUnescape(), "한")
 
-        let fakeIt2 = "&#&#x223E;&#x333;"
-        XCTAssertEqual(fakeIt2.htmlUnescape(), "&#∾̳")
+        do {
+            _ = try "&#4370&#4449;&#4523".htmlUnescape(strict: true)
+            XCTAssert(false)
+        }
+        catch ParseError.MissingSemicolon {
+            XCTAssert(true)
+        }
+        catch {
+            XCTAssert(false)
+        }
 
-        let fakeIt3 = "&lt&#x223E;&#x333;"
-        XCTAssertEqual(fakeIt3.htmlUnescape(), "&lt∾̳")
+        let badEntity = "&some &text; here &lt;script&gt; some more; text here;"
+        XCTAssertEqual(badEntity.htmlUnescape(), "&some &text; here <script> some more; text here;")
 
-        let fakeIt4 = "&#123&#x223E;&#x333;"
-        XCTAssertEqual(fakeIt4.htmlUnescape(), "&#123∾̳")
-        XCTAssertEqual(fakeIt4.htmlUnescape(strict: false), "{∾̳")
+        do {
+            _ = try badEntity.htmlUnescape(strict: true)
+            XCTAssert(false)
+        }
+        catch ParseError.InvalidNamedReference {
+            XCTAssert(true)
+        }
+        catch {
+            XCTAssert(false)
+        }
 
-        let fakeIt5 = "&#xABC&#x223E;&#x333;"
-        XCTAssertEqual(fakeIt5.htmlUnescape(), "&#xABC∾̳")
-        XCTAssertEqual(fakeIt5.htmlUnescape(strict: false), "઼∾̳")
+        let legacyEmbedded = "I'm &notit; I tell you"
+        XCTAssertEqual(legacyEmbedded.htmlUnescape(), "I'm ¬it; I tell you")
+
+        do {
+            _ = try legacyEmbedded.htmlUnescape(strict: true)
+            XCTAssert(false)
+        }
+        catch ParseError.MissingSemicolon {
+            XCTAssert(true)
+        }
+        catch {
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual(try "&&#x223E;&#x333;".htmlUnescape(strict: true), "&∾̳")
+
+        XCTAssertEqual("&#&#x223E;&#x333;".htmlUnescape(), "&#∾̳")
+
+        do {
+            _ = try "&#&#x223E;&#x333;".htmlUnescape(strict: true)
+            XCTAssert(false)
+        }
+        catch ParseError.MalformedNumericReference {
+            XCTAssert(true)
+        }
+        catch {
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual("&#123&#x223E;&#x333;".htmlUnescape(), "{∾̳")
+
+        do {
+            _ = try "&#123&#x223E;&#x333;".htmlUnescape(strict: true)
+            XCTAssert(false)
+        }
+        catch ParseError.MissingSemicolon {
+            XCTAssert(true)
+        }
+        catch {
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual("&#xABC&#x223E;&#x333;".htmlUnescape(), "઼∾̳")
+    }
+
+    func testREADMEExamples() {
+        // encode example
+        var html = "<script>alert(\"abc\")</script>"
+
+        XCTAssertEqual(html.htmlEscape(), "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;")
+
+        // decode example
+        let htmlencoded = "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
+
+        XCTAssertEqual(htmlencoded.htmlUnescape(), "<script>alert(\"abc\")</script>")
+
+        var text = "한, 한, ế, ế, 🇺🇸"
+
+        XCTAssertEqual(text.htmlEscape(), "&#x1112;&#x1161;&#x11AB;, &#xD55C;, &#x1EBF;, e&#x302;&#x301;, &#x1F1FA;&#x1F1F8;")
+
+        XCTAssertEqual(text.htmlEscape(decimal: true), "&#4370;&#4449;&#4523;, &#54620;, &#7871;, e&#770;&#769;, &#127482;&#127480;")
+
+        html = "<script>alert(\"abc\")</script>"
+
+        XCTAssertEqual(html.htmlEscape(), "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;")
+
+        XCTAssertEqual(html.htmlEscape(useNamedReferences: false), "&#x3C;script&#x3E;alert(&#x22;abc&#x22;)&#x3C;/script&#x3E;")
+
+        text = "&#4370&#4449&#4523"
+
+        XCTAssertEqual(text.htmlUnescape(), "한")
+
+        do {
+            _ = try text.htmlUnescape(strict: true)
+            XCTAssert(false)
+        }
+        catch ParseError.MissingSemicolon {
+            XCTAssert(true)
+        }
+        catch {
+            XCTAssert(false)
+        }
     }
 
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {
         return [
             ("testNamedCharacterReferences", testNamedCharacterReferences),
-            ("testSpecialNumericCharacters", testSpecialNumericCharacters),
+            ("testNumericCharacterReferences", testNumericCharacterReferences),
             ("testEncode", testEncode),
             ("testDecode", testDecode),
             ("testInvertibility", testInvertibility),
-            ("testEdgeCases", testEdgeCases)
+            ("testEdgeCases", testEdgeCases),
+            ("testREADMEExamples", testREADMEExamples)
         ]
     }
 }
