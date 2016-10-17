@@ -6,26 +6,42 @@
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
 
 ## Summary
-Pure Swift HTML character escape utility tool for Swift 3.0.
+Pure Swift HTML encode/decode utility tool for Swift 3.0.
 
-Currently includes support for HTML4 named character references. You can find the list of all 252 HTML4 named character references [here](https://www.w3.org/TR/html4/sgml/entities.html).
+Now includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references [here](https://www.w3.org/TR/html5/syntax.html#named-character-references).
 
-`HTMLEntities` escapes ALL non-ASCII characters, as well as the characters `<`, `>`, `&`, `”`, `’` as these five characters are part of the HTML tag and HTML attribute syntaxes.
+`HTMLEntities` can escape ALL non-ASCII characters and ASCII non-print character (i.e. NUL, ESC, DEL), as well as the characters `<`, `>`, `&`, `"`, `’` as these five characters are part of the HTML tag and HTML attribute syntaxes.
 
-In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML4 named character reference escapes.
+In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML5 named character references.
 
 ## Features
 
-* Supports HTML4 named character references (`nbsp`, `cent`, etc.)
+* Supports HTML5 named character references (`NegativeMediumSpace;` etc.)
+* HTML5 spec-compliant; strict parse mode recognizes [parse errors](https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references)
 * Supports decimal and hexadecimal escapes for non-named characters
 * Simple to use as functions are added by way of extending the default `String` class
 * Minimal dependencies; implementation is completely self-contained
 
-## Swift Version
+## Version Info
 
-HTMLEntities 1.0 runs on Swift 3.0, on both macOS and Ubuntu Linux.
+HTMLEntities 2.0 runs on Swift 3.0, on both macOS and Ubuntu Linux.
 
 ## Usage
+
+### Install via Swift Package Manager (SPM)
+
+```swift
+import PackageDescription
+
+let package = Package(
+  name: "package-name",
+  dependencies: [
+    .Package(url: "https://github.com/IBM-Swift/swift-html-entities.git", majorVersion: 2, minor: 0)
+  ]
+)
+```
+
+### In code
 
 ```swift
 import HTMLEntities
@@ -34,13 +50,13 @@ import HTMLEntities
 let html = "<script>alert(\"abc\")</script>"
 
 print(html.htmlEscape())
-// Prints ”&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
+// Prints "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
 
 // decode example
 let htmlencoded = "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
 
 print(htmlencoded.htmlUnescape())
-// Prints ”<script>alert(\"abc\")</script>"
+// Prints "<script>alert(\"abc\")</script>"
 ```
 
 ## Advanced Options
@@ -56,18 +72,18 @@ Defaults to `false`. Specifies if decimal character escapes should be used inste
 ```swift
 import HTMLEntities
 
-let text = "한, 한, é, é, 🇺🇸"
+let text = "한, 한, ế, ế, 🇺🇸"
 
 print(text.htmlEscape())
-// Prints “&#x1112;&#x1161;&#x11AB;, &#xD55C;, e&#x301;, &eacute;, &#x1F1FA;&#x1F1F8;”
+// Prints "&#x1112;&#x1161;&#x11AB;, &#xD55C;, &#x1EBF;, e&#x302;&#x301;, &#x1F1FA;&#x1F1F8;"
 
 print(text.htmlEscape(decimal: true))
-// Prints “&#4370;&#4449;&#4523;, &#54620;, e&#769;, &eacute;, &#127482;&#127480;”
+// Prints "&#4370;&#4449;&#4523;, &#54620;, &#7871;, e&#770;&#769;, &#127482;&#127480;"
 ```
 
 #### `useNamedReferences`
 
-Defaults to `true`. Specifies if named character references should be used whenever possible. Set to `false` to always use numeric character escape, i.e., for compatibility with older browsers that do not recognize named character references.
+Defaults to `true`. Specifies if named character references should be used whenever possible. Set to `false` to always use numeric character references, i.e., for compatibility with older browsers that do not recognize named character references.
 
 ```swift
 import HTMLEntities
@@ -77,7 +93,7 @@ let html = "<script>alert(\"abc\")</script>"
 print(html.htmlEscape())
 // Prints “&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;”
 
-print(html.htmlEscape(userNamedReferences: false))
+print(html.htmlEscape(useNamedReferences: false))
 // Prints “&#x3C;script&#x3E;alert(&#x22;abc&#x22;)&#x3C;/script&#x3E;”
 ```
 
@@ -85,7 +101,7 @@ print(html.htmlEscape(userNamedReferences: false))
 
 #### `strict`
 
-Defaults to `true`. Specifies if HTML numeric character escapes MUST always end with `;`. Some browsers allow numeric character escapes (i.e., decimal and hexadecimal types) to end without `;`. Always ending character escapes with `;` is recommended; however, for compatibility reasons, `HTMLEntities` allows non-strict ending option for situations that require it.
+Defaults to `false`. Specifies if HTML5 parse errors should be thrown or simply passed over. **NOTE**: `htmlUnescape()` is a throwing function if `strict` is used in call argument (no matter if it is set to `true` or `false`); `htmlUnescape()` is NOT a throwing function if no argument is provided.
 
 ```swift
 import HTMLEntities
@@ -95,8 +111,8 @@ let text = "&#4370&#4449&#4523"
 print(text.htmlUnescape())
 // Prints “&#4370&#4449&#4523”
 
-print(text.htmlUnescape(strict: false))
-// Prints “한”
+print(try text.htmlUnescape(strict: true))
+// Throws a `ParseError.MissingSemicolon` instance
 ```
 
 ## License

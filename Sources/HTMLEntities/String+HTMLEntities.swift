@@ -26,266 +26,421 @@ public extension String {
     /// *Optional*. Defaults to `false`.
     /// - parameter useNamedReferences: Specifies if named character references
     /// should be used whenever possible. *Optional*. Defaults to `true`.
-    public func htmlEscape(decimal: Bool = false, useNamedReferences: Bool = true)
-        -> String {
-        let unicodes = self.unicodeScalars
-
+    public func htmlEscape(decimal: Bool = false,
+                           useNamedReferences: Bool = true) -> String {
         // result buffer
         var str: String = ""
 
-        // indices for substringing and iterating
-        var leftIndex = unicodes.startIndex
-        var currentIndex = leftIndex
+        for c in self.characters {
+            let unicodes = String(c).unicodeScalars
 
-        while (currentIndex < unicodes.endIndex) {
-            let nextIndex = unicodes.index(after: currentIndex)
-            let unicode = unicodes[currentIndex].value
-
-            if useNamedReferences,
-                let entity = html4NamedCharactersEncodeMap[unicode] {
-                // move unbuffered characters over to the result buffer
-                str.append(String(unicodes[leftIndex..<currentIndex]))
-
-                // append entity to result buffer
-                str.append(entity)
-
-                // move left index
-                leftIndex = nextIndex
+            if unicodes.count == 1,
+                let unicode = unicodes.first?.value,
+                unicode.isSafeASCII {
+                // character consists of only one unicode,
+                // and is a safe ASCII character
+                str += String(c)
             }
-            else if !unicode.isASCII
-                || unicode.isTagSyntax
-                || unicode.isAttributeSyntax {
-                // unicode is not a named character, and is either
-                // not an ASCII character, or is an unsafe ASCII character
-                // move unbuffered characters over to the result buffer
-                str.append(String(unicodes[leftIndex..<currentIndex]))
-
-                // append unicode value to result buffer
-                let codeStr = decimal ? String(unicode, radix: 10) :
-                    "x" + String(unicode, radix: 16, uppercase: true)
-
-                str.append("&#" + codeStr + ";")
-
-                // move left index
-                leftIndex = nextIndex
+            else if useNamedReferences,
+                let entity = namedCharactersEncodeMap[c] {
+                // character has a named character reference equivalent
+                str += "&" + entity
             }
+            else {
+                // all other cases:
+                // deconstruct character into unicodes,
+                // then escape each unicode individually
+                for scalar in unicodes {
+                    let unicode = scalar.value
 
-            currentIndex = nextIndex
+                    if unicode.isSafeASCII {
+                        str += String(scalar)
+                    }
+                    else {
+                        let codeStr = decimal ? String(unicode, radix: 10) :
+                            "x" + String(unicode, radix:16, uppercase: true)
+
+                        str += "&#" + codeStr + ";"
+                    }
+                }
+            }
         }
-
-        if str == "" {
-            // no unsafe unicode found
-            // return string as it is
-            return self
-        }
-
-        // append rest of string to result buffer
-        str.append(String(unicodes[leftIndex..<unicodes.endIndex]))
 
         return str
     }
 
-    /// Return string as HTML unescaped by replacing HTML named character entities
-    /// with their unicode character equivalents.
+    /// Return string as HTML unescaped by replacing HTML character references with their unicode
+    /// character equivalents.
     /// For example, this function turns
     /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
     /// into
     /// `"<script>alert(\"abc\")</script>"`
     /// - parameter strict: Specifies if escapes MUST always end with `;`.
-    /// *Optional*. Defaults to true.
-    public func htmlUnescape(strict: Bool = true) -> String {
-        let unicodes = self.unicodeScalars
-
+    /// - throws: An error of type `ParseError`
+    public func htmlUnescape(strict: Bool) throws -> String {
         // result buffer
-        var str: String? = nil
+        var str = ""
 
-        // entity buffer
-        // use optional string since there are issues on Linux when checking
-        // again empty string, i.e., "\u{200C}" == "" is true; "\u{200C}" is
-        // the named character &zwnj;
-        var entity: String = ""
+        // entity buffers
+        var entityPrefix = ""
+        var entity = ""
 
         // current parse state
         var state = EntityParseState.Invalid
 
-        // indices for substringing and iterating
-        var leftIndex = unicodes.startIndex
-        var currentIndex = leftIndex
-        var ampersandIndex = unicodes.endIndex
-
-        // closure for resetting parse state to its original state
-        let reset = {
-            entity = ""
-            state = .Invalid
-            ampersandIndex = unicodes.endIndex
-        }
-
-        while (currentIndex < unicodes.endIndex) {
-            var nextIndex = unicodes.index(after: currentIndex)
-            let unicode = unicodes[currentIndex].value
+        for u in self.unicodeScalars {
+            let unicodeAsString = String(u)
+            let unicode = u.value
 
             // nondeterminstic finite automaton for parsing entity
-            // NOTE: While all entities begin with &,
-            // not all HTML5 named character references end with ;,
-            // nor do numeric entities, hex or dec, have to end with ;
             switch state {
             case .Invalid:
                 if unicode.isAmpersand {
-                    // start of a possible entity of unknown type
+                    // start of a possible character reference
                     state = .Unknown
-                    ampersandIndex = currentIndex
+                    entityPrefix = unicodeAsString
+                }
+                else {
+                    // move unicode to result buffer
+                    str += unicodeAsString
                 }
             case .Unknown:
-                // parsed an & unicode
-                // need to determine type of entity
-                if unicode.isHash {
-                    // entity can only be a number type
+                // previously parsed &
+                // need to determine type of character reference
+                if unicode.isAmpersand {
+                    // parsed & again
+                    // move previous & to result buffer
+                    str += unicodeAsString
+                }
+                else if unicode.isHash {
+                    // numeric character reference
                     state = .Number
+                    entityPrefix += unicodeAsString
                 }
                 else if unicode.isAlphaNumeric {
-                    // entity can only be named character reference type
+                    // named character reference
                     state = .Named
 
-                    // walk back one unicode
-                    nextIndex = currentIndex
-                }
-                else if unicode.isAmpersand {
-                    // parsed & again, ignore the previous one
-                    ampersandIndex = currentIndex
+                    // move current unicode to entity buffer
+                    entity += unicodeAsString
                 }
                 else {
-                    // false alarm, not an entity; reset state
-                    reset()
+                    // false alarm, not a character reference
+                    // move back to invalid state
+                    entityPrefix = ""
+                    state = .Invalid
+
+                    // move the consumed & and current unicode to result buffer
+                    str += entityPrefix + unicodeAsString
                 }
             case .Number:
-                // parsed a # unicode
+                // previously parsed &#
                 // need to determine dec or hex
-                if unicode.isX {
-                    // entity can only be hexadecimal type
+                if unicode.isAmpersand {
+                    // parsed & again
+                    if strict {
+                        // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                        // "If no characters match the range, then don't consume any characters
+                        // (and unconsume the U+0023 NUMBER SIGN character and, if appropriate,
+                        // the X character). This is a parse error; nothing is returned."
+                        throw ParseError.MalformedNumericReference(entityPrefix + unicodeAsString)
+                    }
+
+                    // move the consume &# to result buffer
+                    str += entityPrefix
+
+                    // move to unknown state
+                    state = .Unknown
+                    entityPrefix = unicodeAsString
+                }
+                else if unicode.isX {
+                    // hexadecimal numeric character reference
                     state = .Hex
+                    entityPrefix += unicodeAsString
                 }
                 else if unicode.isNumeral {
-                    // entity can only be decimal type
+                    // decimal numeric character reference
                     state = .Dec
-
-                    // walk back one unicode
-                    nextIndex = currentIndex
-                }
-                else if unicode.isAmpersand {
-                    // parsed & again, ignore the previous one
-                    state = .Unknown
-                    ampersandIndex = currentIndex
+                    entity += unicodeAsString
                 }
                 else {
-                    // false alarm, not an entity; reset state
-                    reset()
-                }
-            case .Dec, .Hex, .Named:
-                if unicode.isAmpersand {
-                    // parsed & again, ignore the previous one
-                    state = .Unknown
-                    ampersandIndex = currentIndex
+                    // false alarm, not a character reference
+                    if strict {
+                        // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                        // "If no characters match the range, then don't consume any characters
+                        // (and unconsume the U+0023 NUMBER SIGN character and, if appropriate,
+                        // the X character). This is a parse error; nothing is returned."
+                        throw ParseError.MalformedNumericReference(entityPrefix + unicodeAsString)
+                    }
+
+                    // move the consumed &# and current unicode to result buffer
+                    str += entityPrefix + unicodeAsString
+
+                    // move to invalid state
+                    state = .Invalid
+                    entityPrefix = ""
                     entity = ""
-
-                    break
                 }
+            case .Dec, .Hex:
+                // previously parsed &#[0-9]+ or &#[xX][0-9A-Fa-f]*
+                if state == .Dec && unicode.isNumeral || state == .Hex && unicode.isHexNumeral {
+                    // greedy matching
+                    // consume as many valid characters as possible before unescaping
+                    entity += unicodeAsString
+                }
+                else {
+                    // current character is not in matching range
+                    if strict {
+                        if entity == "" {
+                            // no characters matching range was parsed
+                            // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                            // "If no characters match the range, then don't consume any characters
+                            // (and unconsume the U+0023 NUMBER SIGN character and, if appropriate,
+                            // the X character). This is a parse error; nothing is returned."
+                            throw ParseError.MalformedNumericReference(entityPrefix + unicodeAsString)
+                        }
 
-                // lookahead one unicode to help decide next action
-                let lookahead: UInt32? = nextIndex == unicodes.endIndex
-                    ? nil : unicodes[nextIndex].value
+                        if !unicode.isSemicolon {
+                            // entity did not end with ;
+                            // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                            // "[I]f the next character is a U+003B SEMICOLON, consume that too.
+                            // If it isn't, there is a parse error."
+                            throw ParseError.MissingSemicolon(entityPrefix + entity)
+                        }
+                    }
 
-                var isEndOfEntity = false
+                    let unescaped = try decode(entity: entity, entityPrefix: entityPrefix, strict: strict)
 
-                if unicode.isValidEntityUnicode(for: state) {
-                    // buffer current unicode
-                    entity.append(String(unicodes[currentIndex]))
+                    // append unescaped numeric reference to result buffer
+                    str += unescaped
 
-                    if let lookahead = lookahead {
-                        // lookahead is not empty
-                        isEndOfEntity = lookahead.isSemicolon
-                            || !strict && !lookahead.isValidEntityUnicode(for: state)
+                    if unicode.isAmpersand {
+                        // parsed & again
+                        // move to unknown state
+                        state = .Unknown
+                        entityPrefix = unicodeAsString
+                        entity = ""
                     }
                     else {
-                        // lookahead is empty
-                        isEndOfEntity = !strict
+                        if !unicode.isSemicolon {
+                            // move current unicode to result buffer
+                            str += unicodeAsString
+                        }
+
+                        // move back to invalid state
+                        state = .Invalid
+                        entityPrefix = ""
+                        entity = ""
                     }
+                }
+            case .Named:
+                // previously parsed &[0-9A-Za-z]+
+                if unicode.isAlphaNumeric {
+                    // keep consuming alphanumeric unicodes
+                    // only try to decode it when we encounter a nonalphanumeric unicode
+                    entity += unicodeAsString
                 }
                 else {
-                    // strict parsing, but encountered something
-                    // other than ; or hexadecimal numeral
-                    reset()
-                }
-
-                if isEndOfEntity {
-                    if let lookahead = lookahead, lookahead.isSemicolon {
-                        // consume the ; by moving nextIndex by one so that
-                        // nextIndex is pointing to the unicode after the ;
-                        nextIndex = unicodes.index(after: nextIndex)
-
-                        if state == .Named {
-                            entity.append(";")
-                        }
+                    if unicode.isSemicolon {
+                        entity += unicodeAsString
                     }
 
-                    var code: UInt32? = nil
+                    // try to decode parsed chunk of alphanumeric unicodes
+                    let unescaped = try decode(entity: entity, entityPrefix: entityPrefix, strict: strict)
 
-                    switch state {
-                    case .Dec, .Hex:
-                        let radix = state == .Dec ? 10 : 16
+                    str += unescaped
 
-                        code = UInt32(entity, radix: radix)
+                    if unicode.isAmpersand {
+                        // parsed & again
+                        // move to unknown state
+                        state = .Unknown
+                        entityPrefix = unicodeAsString
+                        entity = ""
 
-                        if let c = code {
-                            if c.isReplacementCharacterEquivalent {
-                                code = replacementCharacterAsUInt32
-                            }
-                            else {
-                                code = htmlSpecialNumericDecodeMap[c] ?? code
-                            }
-                        }
-                        else {
-                            // code is invalid anyway, let's replace it with 0xFFFD
-                            code = replacementCharacterAsUInt32
-                        }
-                    case .Named:
-                        code = html4NamedCharactersDecodeMap["&" + entity]
-                    default:
                         break
                     }
-
-                    if let code = code,
-                        let unicodeScalar = UnicodeScalar(code) {
-                        // reached end of entity
-                        // move unbuffered unicodes over to the result buffer
-                        str = str == nil ? "" : str
-
-                        str?.append(String(unicodes[leftIndex..<ampersandIndex]))
-
-                        // append unescaped character to result buffer
-                        str?.append(Character(unicodeScalar))
-
-                        // move left index since we have buffered everything
-                        // up to and including the current entity
-                        leftIndex = nextIndex
+                    else if !unicode.isSemicolon {
+                        // move current unicode to result buffer
+                        str += unicodeAsString
                     }
 
-                    // even if entity wasn't unescapable, reset since it is
-                    // end of entity
-                    reset()
+                    // move back to invalid state
+                    state = .Invalid
+                    entityPrefix = ""
+                    entity = ""
                 }
             }
-
-            // move currentIndex to the position of the next unicode to be consumed
-            currentIndex = nextIndex
         }
 
-        if var str = str {
-            // append rest of string to result buffer
-            str.append(String(unicodes[leftIndex..<unicodes.endIndex]))
+        // one more round of finite automaton to catch the edge case where the original string
+        // ends with a character reference that isn't terminated by ;
+        switch state {
+        case .Dec, .Hex:
+            // parsed a partial numeric character reference
+            if strict {
+                if entity == "" {
+                    // no characters matching range was parsed
+                    // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                    // "If no characters match the range, then don't consume any characters
+                    // (and unconsume the U+0023 NUMBER SIGN character and, if appropriate,
+                    // the X character). This is a parse error; nothing is returned."
+                    throw ParseError.MalformedNumericReference(entityPrefix)
+                }
 
-            return str
+                // by this point in code, entity is not empty and did not end with ;
+                // if it did, the numeric character reference would've been unescaped inside the loop
+                // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                // "[I]f the next character is a U+003B SEMICOLON, consume that too.
+                // If it isn't, there is a parse error."
+                throw ParseError.MissingSemicolon(entityPrefix + entity)
+            }
+
+            fallthrough
+        case .Named:
+            // parsed a partial character reference
+            // unescape what we have left
+            str += try decode(entity: entity, entityPrefix: entityPrefix, strict: strict)
+        default:
+            // all other states
+            // dump partial buffers into result string
+            str += entityPrefix + entity
         }
 
-        return self
+        return str
+    }
+    
+    /// Return string as HTML unescaped by replacing HTML character references with their unicode
+    /// character equivalents.
+    /// For example, this function turns
+    /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
+    /// into
+    /// `"<script>alert(\"abc\")</script>"`
+    /// Equivalent to `htmlUnescape(strict: false)`, but does not throw parse errors.
+    public func htmlUnescape() -> String {
+        // non-strict mode should never throw error
+        return try! self.htmlUnescape(strict: false)
+    }
+}
+
+private func decode(entity: String, entityPrefix: String, strict: Bool) throws -> String {
+    switch entityPrefix {
+    case "&#", "&#x", "&#X":
+        // numeric character reference
+        let radix = entityPrefix == "&#" ? 10 : 16
+
+        if strict && entity == "" {
+            // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+            // "If no characters match the range, then don't consume any characters
+            // (and unconsume the U+0023 NUMBER SIGN character and, if appropriate,
+            // the X character). This is a parse error; nothing is returned."
+            throw ParseError.MalformedNumericReference(entityPrefix)
+        }
+        else if var code = UInt32(entity, radix: radix) {
+            if code.isReplacementCharacterEquivalent {
+                code = replacementCharacterAsUInt32
+
+                if strict {
+                    // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                    // "[I]f the number is in the range 0xD800 to 0xDFFF or is greater
+                    // than 0x10FFFF, then this is a parse error."
+                    throw ParseError.OutsideValidUnicodeRange(entityPrefix + entity)
+                }
+            }
+            else if let c = deprecatedNumericDecodeMap[code] {
+                code = c
+
+                if strict {
+                    // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                    // "If that number is one of the numbers in the first column of the
+                    // following table, then this is a parse error."
+                    throw ParseError.DeprecatedNumericReference(entityPrefix + entity)
+                }
+            }
+            else if strict && code.isDisallowedReference {
+                // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                // "[I]f the number is in the range 0x0001 to 0x0008, 0x000D to 0x001F, 0x007F
+                // to 0x009F, 0xFDD0 to 0xFDEF, or is one of 0x000B, 0xFFFE, 0xFFFF, 0x1FFFE,
+                // 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE, 0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE,
+                // 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF, 0x9FFFE,
+                // 0x9FFFF, 0xAFFFE, 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE,
+                // 0xDFFFF, 0xEFFFE, 0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, or 0x10FFFF, then
+                // this is a parse error."
+                throw ParseError.DisallowedNumericReference(entityPrefix + entity)
+            }
+
+            return String(UnicodeScalar(code)!)
+        }
+        else {
+            // Assume entity is nonempty and only contains valid characters for the given type
+            // of numeric character reference. Given this assumption, at this point in the code
+            // the numeric character reference must be greater than `UInt32.max`, i.e., it is
+            // not representable by UInt32 (and it is, by transitivity, greater than 0x10FFFF);
+            // therefore, the numeric character reference should be replaced by U+FFFD
+            if strict {
+                // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                // "[I]f the number is in the range 0xD800 to 0xDFFF or is greater
+                // than 0x10FFFF, then this is a parse error."
+                throw ParseError.OutsideValidUnicodeRange(entityPrefix + entity)
+            }
+
+            return String(UnicodeScalar(replacementCharacterAsUInt32)!)
+        }
+    case "&":
+        // named character reference
+        if entity == "" {
+            return entityPrefix
+        }
+
+        if entity.hasSuffix(";") {
+            // Step 1: check all other named characters first
+            // Assume special case is rare, always check regular case first to minimize
+            // search time cost amortization
+            if let c = namedCharactersDecodeMap[entity] {
+                return String(c)
+            }
+
+            // Step 2: check special named characters if entity didn't match any regular
+            // named character references
+            if let s = specialNamedCharactersDecodeMap[entity] {
+                return s
+            }
+        }
+
+        // next, check if entity contains a legacy named character reference in its prefix
+        var offset = 2
+
+        while (offset <= entity.characters.count && offset <= 6) {
+            let upperIndex = entity.index(entity.startIndex, offsetBy: offset)
+            let reference = entity[entity.startIndex..<upperIndex]
+
+            if let c = legacyNamedCharactersDecodeMap[reference] {
+                if strict {
+                    // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+                    // "[A] character reference is parsed. If the last character matched is not a
+                    // ";" (U+003B) character, there is a parse error."
+                    throw ParseError.MissingSemicolon("&" + reference)
+                }
+
+                return String(c) + entity[upperIndex..<entity.endIndex]
+            }
+
+            offset += 1
+        }
+
+        if strict && entity.hasSuffix(";") {
+            // No name character reference matched; for the sake of simplicity, assume
+            // entity can only contain alphanumeric characters with a semicolon at the end
+            // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+            // "[I]f the characters after the U+0026 AMPERSAND character (&) consist of
+            // a sequence of one or more alphanumeric ASCII characters followed by a
+            // U+003B SEMICOLON character (;), then this is a parse error."
+            throw ParseError.InvalidNamedReference(entityPrefix + entity)
+        }
+        
+        return entityPrefix + entity
+    default:
+        // this should NEVER be hit in code execution
+        // if this block is reached, then decoder has faulty logic
+        throw ParseError.IllegalArgument("Invaild entityPrefix: must be one of [\"&\", \"&#\", \"&#x\", \"&#X\"]")
     }
 }

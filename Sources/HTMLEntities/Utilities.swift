@@ -14,75 +14,128 @@
  * limitations under the License.
  */
 
-/// Invert a dictionary: <Key, Value> -> <Value, Key>
-/// Note: Does not check for uniqueness among values
-func invert<K, V: Hashable>(_ dict: [K: V]) -> [V: K] {
-    var inverseDict: [V: K] = [:]
+extension Dictionary {
+    /// Union of two dictionaries
+    /// Note: The <key, value> in the argument will override
+    /// the current dictionary's <key, value> if the keys match
+    func updating(_ dict: [Key: Value]) -> [Key: Value] {
+        var newDict = self
 
-    for (key, value) in dict {
-        inverseDict[value] = key
+        for (key, value) in dict {
+            newDict[key] = value
+        }
+
+        return newDict
     }
+}
 
-    return inverseDict
+extension Dictionary where Value: Hashable {
+    /// Invert a dictionary: <Key, Value> -> <Value, Key>
+    /// Note: Does not check for uniqueness among values
+    func inverting(_ pick: (Key, Key) -> Key = { existingValue, newValue in
+        return newValue
+        }) -> [Value: Key] {
+        var inverseDict: [Value: Key] = [:]
+
+        for (key, value) in self {
+            if let existing = inverseDict[value] {
+                inverseDict[value] = pick(existing, key)
+            }
+            else {
+                inverseDict[value] = key
+            }
+        }
+
+        return inverseDict
+    }
 }
 
 extension UInt32 {
     var isAlphaNumeric: Bool {
-        // ASCII values of [0-9], [A-Z0, [and [a-z]
-        return self.isNumeral || 65...90 ~= self || 97...122 ~= self
+        // unicode values of [0-9], [A-Z], and [a-z]
+        return self.isNumeral || 0x41...0x5A ~= self || 0x61...0x7A ~= self
     }
 
     var isAmpersand: Bool {
-        // ASCII value of &
-        return self == 38
+        // unicode value of &
+        return self == 0x26
     }
 
     var isASCII: Bool {
-        // Less than 2^7
-        return self < 128
+        // Less than 0x80
+        return self < 0x80
     }
 
     /// https://www.w3.org/International/questions/qa-escapes#use
     var isAttributeSyntax: Bool {
-        // ASCII values of [", ']
-        return self == 34 || self == 39
+        // unicode values of [", ']
+        return self == 0x22 || self == 0x27
+    }
+
+    var isDisallowedReference: Bool {
+        // unicode values of [0x1-0x8], [0xD-0x1F], [0x7F-0x9F], [0xFDD0-0xFDEF], 0xB, 0xFFFE,
+        // 0xFFFF, 0x1FFFE, 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE, 0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE,
+        // 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF, 0x9FFFE, 0x9FFFF, 0xAFFFE,
+        // 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE, 0xDFFFF, 0xEFFFE, 0xEFFFF, 0xFFFFE,
+        // 0xFFFFF, 0x10FFFE, and 0x10FFFF
+        // return disallowedNumericReferences[self] ?? false
+
+        return 0x1...0x8 ~= self || 0xD...0x1F ~= self || 0xFDD0...0xFDEF ~= self || self == 0xB
+            || self == 0xFFFE || self == 0xFFFF || self == 0x1FFFE || self == 0x1FFFF
+            || self == 0x2FFFE || self == 0x2FFFF || self == 0x3FFFE || self == 0x3FFFF
+            || self == 0x4FFFE || self == 0x4FFFF || self == 0x5FFFE || self == 0x5FFFF
+            || self == 0x6FFFE || self == 0x6FFFF || self == 0x7FFFE || self == 0x7FFFF
+            || self == 0x8FFFE || self == 0x8FFFF || self == 0x9FFFE || self == 0x9FFFF
+            || self == 0xAFFFE || self == 0xAFFFF || self == 0xBFFFE || self == 0xBFFFF
+            || self == 0xCFFFE || self == 0xCFFFF || self == 0xDFFFE || self == 0xDFFFF
+            || self == 0xEFFFE || self == 0xEFFFF || self == 0xFFFFE || self == 0xFFFFF
+            || self == 0x10FFFE || self == 0x10FFFF
     }
 
     var isHash: Bool {
-        // ASCII value of #
-        return self == 35
+        // unicode value of #
+        return self == 0x23
     }
 
     var isHexNumeral: Bool {
-        // ASCII values of [0-9], [A-F], and [a-f]
-        return isNumeral || 65...70 ~= self || 97...102 ~= self
+        // unicode values of [0-9], [A-F], and [a-f]
+        return isNumeral || 0x41...0x46 ~= self || 0x61...0x66 ~= self
+    }
+
+    var isNonprinting: Bool {
+        // unicode values of [NUL-US] and DEL non-printing characters
+        return 0x0...0x1F ~= self || self == 0x7F
     }
 
     var isNumeral: Bool {
-        // ASCII values of [0-9]
-        return 48...57 ~= self
+        // unicode values of [0-9]
+        return 0x30...0x39 ~= self
     }
 
     /// https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
     var isReplacementCharacterEquivalent: Bool {
-        // UTF32 values of [0xD800-0xDFFF], (0x10FFFF-∞]
-        return 55296...57343 ~= self || 1114111 < self
+        // UInt32 values of [0xD800-0xDFFF], (0x10FFFF-∞]
+        return 0xD800...0xDFFF ~= self || 0x10FFFF < self
+    }
+
+    var isSafeASCII: Bool {
+        return self.isASCII && !self.isNonprinting && !self.isAttributeSyntax && !self.isTagSyntax
     }
 
     var isSemicolon: Bool {
-        // ASCII value of ;
-        return self == 59
+        // unicode value of ;
+        return self == 0x3B
     }
 
     /// https://www.w3.org/International/questions/qa-escapes#use
     var isTagSyntax: Bool {
-        // ASCII values of [&, < , >]
-        return self == 38 || self == 60 || self == 62
+        // unicode values of [&, < , >]
+        return self.isAmpersand || self == 0x3C || self == 0x3E
     }
 
     var isX: Bool {
-        // ASCII values of X and x
-        return self == 88 || self == 120
+        // unicode values of X and x
+        return self == 0x58 || self == 0x78
     }
 
     func isValidEntityUnicode(for state: EntityParseState) -> Bool {
