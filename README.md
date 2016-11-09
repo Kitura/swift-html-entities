@@ -6,7 +6,7 @@
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
 
 ## Summary
-Pure Swift HTML encode/decode utility tool for Swift 3.0.
+Pure Swift HTML encode/decode utility tool for Swift 3.
 
 Now includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references [here](https://www.w3.org/TR/html5/syntax.html#named-character-references).
 
@@ -24,11 +24,13 @@ In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal
 
 ## Version Info
 
-HTMLEntities 2.0 runs on Swift 3.0, on both macOS and Ubuntu Linux.
+HTMLEntities 2.0 runs on Swift 3, on both macOS and Ubuntu Linux.
 
 ## Usage
 
 ### Install via Swift Package Manager (SPM)
+
+Add `HTMLEntities` to your `Package.swift`:
 
 ```swift
 import PackageDescription

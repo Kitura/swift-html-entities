@@ -61,13 +61,13 @@ class HTMLEntitiesTests: XCTestCase {
 
             do {
                 _ = try escaped.htmlUnescape(strict: true)
-                XCTAssert(false)
+                XCTFail("Did not throw error")
             }
             catch ParseError.MissingSemicolon {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
         }
 
@@ -99,13 +99,13 @@ class HTMLEntitiesTests: XCTestCase {
 
             do {
                 _ = try decEscaped.htmlUnescape(strict: true)
-                XCTAssert(false)
+                XCTFail("Did not throw error")
             }
             catch ParseError.DeprecatedNumericReference {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
 
             do {
@@ -116,7 +116,7 @@ class HTMLEntitiesTests: XCTestCase {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
         }
 
@@ -135,23 +135,24 @@ class HTMLEntitiesTests: XCTestCase {
 
             do {
                 _ = try decEscaped.htmlUnescape(strict: true)
-                XCTAssert(false)
+                XCTFail("Did not throw error")
             }
             catch ParseError.OutsideValidUnicodeRange {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
 
             do {
                 _ = try hexEscaped.htmlUnescape(strict: true)
+                XCTFail("Did not throw error")
             }
             catch ParseError.OutsideValidUnicodeRange {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
         }
 
@@ -178,24 +179,24 @@ class HTMLEntitiesTests: XCTestCase {
 
             do {
                 _ = try decEscaped.htmlUnescape(strict: true)
-                XCTAssert(false)
+                XCTFail("Did not throw error")
             }
             catch ParseError.DisallowedNumericReference {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
 
             do {
                 _ = try hexEscaped.htmlUnescape(strict: true)
-                XCTAssert(false)
+                XCTFail("Did not throw error")
             }
             catch ParseError.DisallowedNumericReference {
                 XCTAssert(true)
             }
             catch {
-                XCTAssert(false)
+                XCTFail("Wrong error thrown")
             }
         }
     }
@@ -238,13 +239,13 @@ class HTMLEntitiesTests: XCTestCase {
 
         do {
             _ = try "&#4370&#4449;&#4523".htmlUnescape(strict: true)
-            XCTAssert(false)
+            XCTFail("Did not throw error")
         }
         catch ParseError.MissingSemicolon {
             XCTAssert(true)
         }
         catch {
-            XCTAssert(false)
+            XCTFail("Wrong error thrown")
         }
 
         let badEntity = "&some &text; here &lt;script&gt; some more; text here;"
@@ -252,13 +253,13 @@ class HTMLEntitiesTests: XCTestCase {
 
         do {
             _ = try badEntity.htmlUnescape(strict: true)
-            XCTAssert(false)
+            XCTFail("Did not throw error")
         }
         catch ParseError.InvalidNamedReference {
             XCTAssert(true)
         }
         catch {
-            XCTAssert(false)
+            XCTFail("Wrong error thrown")
         }
 
         let legacyEmbedded = "I'm &notit; I tell you"
@@ -266,13 +267,13 @@ class HTMLEntitiesTests: XCTestCase {
 
         do {
             _ = try legacyEmbedded.htmlUnescape(strict: true)
-            XCTAssert(false)
+            XCTFail("Did not throw error")
         }
         catch ParseError.MissingSemicolon {
             XCTAssert(true)
         }
         catch {
-            XCTAssert(false)
+            XCTFail("Wrong error thrown")
         }
 
         XCTAssertEqual(try "&&#x223E;&#x333;".htmlUnescape(strict: true), "&∾̳")
@@ -281,26 +282,26 @@ class HTMLEntitiesTests: XCTestCase {
 
         do {
             _ = try "&#&#x223E;&#x333;".htmlUnescape(strict: true)
-            XCTAssert(false)
+            XCTFail("Did not throw error")
         }
         catch ParseError.MalformedNumericReference {
             XCTAssert(true)
         }
         catch {
-            XCTAssert(false)
+            XCTFail("Wrong error thrown")
         }
 
         XCTAssertEqual("&#123&#x223E;&#x333;".htmlUnescape(), "{∾̳")
 
         do {
             _ = try "&#123&#x223E;&#x333;".htmlUnescape(strict: true)
-            XCTAssert(false)
+            XCTFail("Did not throw error")
         }
         catch ParseError.MissingSemicolon {
             XCTAssert(true)
         }
         catch {
-            XCTAssert(false)
+            XCTFail("Wrong error thrown")
         }
 
         XCTAssertEqual("&#xABC&#x223E;&#x333;".htmlUnescape(), "઼∾̳")
@@ -335,13 +336,13 @@ class HTMLEntitiesTests: XCTestCase {
 
         do {
             _ = try text.htmlUnescape(strict: true)
-            XCTAssert(false)
+            XCTFail("Did not throw error")
         }
         catch ParseError.MissingSemicolon {
             XCTAssert(true)
         }
         catch {
-            XCTAssert(false)
+            XCTFail("Wrong error thrown")
         }
     }
 
