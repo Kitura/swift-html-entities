@@ -117,6 +117,10 @@ print(try text.htmlUnescape(strict: true))
 // Throws a `ParseError.MissingSemicolon` instance
 ```
 
+## Acknowledgments
+
+`HTMLEntities` was designed to support some of the same options as [`he`](https://github.com/mathiasbynens/he), a popular Javascript html encoder/decoder.
+
 ## License
 
 Apache 2.0
