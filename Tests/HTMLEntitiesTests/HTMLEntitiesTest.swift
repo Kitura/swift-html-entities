@@ -42,6 +42,7 @@ class HTMLEntitiesTests: XCTestCase {
         XCTAssertEqual(specialNamedCharactersDecodeMap.count, 2)
         XCTAssertEqual(legacyNamedCharactersDecodeMap.count, 106)
         XCTAssertEqual(namedCharactersDecodeMap.count, 2123)
+        XCTAssertEqual(legacyNamedCharactersLengthRange, 2...6)
 
         // make sure regular named character references can be escaped/unescaped
         for (character, reference) in namedCharactersEncodeMap {
@@ -202,9 +203,9 @@ class HTMLEntitiesTests: XCTestCase {
     }
 
     func testEncode() {
-        XCTAssertEqual(str1Unescaped.htmlEscape(), str1Escaped)
-        XCTAssertEqual(str2Unescaped.htmlEscape(), str2Escaped)
-        XCTAssertEqual(str3Unescaped.htmlEscape(), str3Escaped)
+        XCTAssertEqual(str1Unescaped.htmlEscape(useNamedReferences: true), str1Escaped)
+        XCTAssertEqual(str2Unescaped.htmlEscape(useNamedReferences: true), str2Escaped)
+        XCTAssertEqual(str3Unescaped.htmlEscape(useNamedReferences: true), str3Escaped)
     }
 
     func testDecode() {
@@ -215,16 +216,16 @@ class HTMLEntitiesTests: XCTestCase {
 
     func testInvertibility() {
         XCTAssertEqual(try str1Unescaped.htmlEscape().htmlUnescape(strict: true), str1Unescaped)
-        XCTAssertEqual(try str1Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(strict: true), str1Unescaped)
-        XCTAssertEqual(try str1Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(strict: true), str1Unescaped)
+        XCTAssertEqual(try str1Unescaped.htmlEscape(useNamedReferences: true).htmlUnescape(strict: true), str1Unescaped)
+        XCTAssertEqual(try str1Unescaped.htmlEscape(decimal: true).htmlUnescape(strict: true), str1Unescaped)
 
         XCTAssertEqual(try str2Unescaped.htmlEscape().htmlUnescape(strict: true), str2Unescaped)
-        XCTAssertEqual(try str2Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(strict: true), str2Unescaped)
-        XCTAssertEqual(try str2Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(strict: true), str2Unescaped)
+        XCTAssertEqual(try str2Unescaped.htmlEscape(useNamedReferences: true).htmlUnescape(strict: true), str2Unescaped)
+        XCTAssertEqual(try str2Unescaped.htmlEscape(decimal: true).htmlUnescape(strict: true), str2Unescaped)
 
         XCTAssertEqual(try str3Unescaped.htmlEscape().htmlUnescape(strict: true), str3Unescaped)
-        XCTAssertEqual(try str3Unescaped.htmlEscape(useNamedReferences: false).htmlUnescape(strict: true), str3Unescaped)
-        XCTAssertEqual(try str3Unescaped.htmlEscape(decimal: true, useNamedReferences: false).htmlUnescape(strict: true), str3Unescaped)
+        XCTAssertEqual(try str3Unescaped.htmlEscape(useNamedReferences: true).htmlUnescape(strict: true), str3Unescaped)
+        XCTAssertEqual(try str3Unescaped.htmlEscape(decimal: true).htmlUnescape(strict: true), str3Unescaped)
     }
 
     func testEdgeCases() {
@@ -308,28 +309,51 @@ class HTMLEntitiesTests: XCTestCase {
     }
 
     func testREADMEExamples() {
-        // encode example
+        // escape example
         var html = "<script>alert(\"abc\")</script>"
 
-        XCTAssertEqual(html.htmlEscape(), "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;")
+        XCTAssertEqual(html.htmlEscape(), "&#x3C;script&#x3E;alert(&#x22;abc&#x22;)&#x3C;/script&#x3E;")
 
-        // decode example
+        // unescape examples
         let htmlencoded = "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"
 
         XCTAssertEqual(htmlencoded.htmlUnescape(), "<script>alert(\"abc\")</script>")
 
+        // allowUnsafeSymbols
+        html = "<p>\"café\"</p>"
+
+        XCTAssertEqual(html.htmlEscape(), "&#x3C;p&#x3E;&#x22;caf&#xE9;&#x22;&#x3C;/p&#x3E;")
+        XCTAssertEqual(html.htmlEscape(allowUnsafeSymbols: true), "<p>\"caf&#xE9;\"</p>")
+
+        // decimal
         var text = "한, 한, ế, ế, 🇺🇸"
 
         XCTAssertEqual(text.htmlEscape(), "&#x1112;&#x1161;&#x11AB;, &#xD55C;, &#x1EBF;, e&#x302;&#x301;, &#x1F1FA;&#x1F1F8;")
-
         XCTAssertEqual(text.htmlEscape(decimal: true), "&#4370;&#4449;&#4523;, &#54620;, &#7871;, e&#770;&#769;, &#127482;&#127480;")
 
+        // encodeEverything
+        text = "A quick brown fox jumps over the lazy dog"
+
+        XCTAssertEqual(text.htmlEscape(), "A quick brown fox jumps over the lazy dog")
+        XCTAssertEqual(text.htmlEscape(encodeEverything: true), "&#x41;&#x20;&#x71;&#x75;&#x69;&#x63;&#x6B;&#x20;&#x62;&#x72;&#x6F;&#x77;&#x6E;&#x20;&#x66;&#x6F;&#x78;&#x20;&#x6A;&#x75;&#x6D;&#x70;&#x73;&#x20;&#x6F;&#x76;&#x65;&#x72;&#x20;&#x74;&#x68;&#x65;&#x20;&#x6C;&#x61;&#x7A;&#x79;&#x20;&#x64;&#x6F;&#x67;")
+        XCTAssertEqual(text.htmlEscape(allowUnsafeSymbols: true, encodeEverything: true), "&#x41;&#x20;&#x71;&#x75;&#x69;&#x63;&#x6B;&#x20;&#x62;&#x72;&#x6F;&#x77;&#x6E;&#x20;&#x66;&#x6F;&#x78;&#x20;&#x6A;&#x75;&#x6D;&#x70;&#x73;&#x20;&#x6F;&#x76;&#x65;&#x72;&#x20;&#x74;&#x68;&#x65;&#x20;&#x6C;&#x61;&#x7A;&#x79;&#x20;&#x64;&#x6F;&#x67;")
+
+        // useNamedReferences
         html = "<script>alert(\"abc\")</script>"
 
-        XCTAssertEqual(html.htmlEscape(), "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;")
+        XCTAssertEqual(html.htmlEscape(), "&#x3C;script&#x3E;alert(&#x22;abc&#x22;)&#x3C;/script&#x3E;")
+        XCTAssertEqual(html.htmlEscape(useNamedReferences: true), "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;")
 
+        // escape options
+        let currentSetting = String.HTMLEscapeOptions.useNamedReferences
+        String.HTMLEscapeOptions.useNamedReferences = true
+
+        XCTAssertEqual(html.htmlEscape(), "&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;")
         XCTAssertEqual(html.htmlEscape(useNamedReferences: false), "&#x3C;script&#x3E;alert(&#x22;abc&#x22;)&#x3C;/script&#x3E;")
 
+        String.HTMLEscapeOptions.useNamedReferences = currentSetting
+
+        // strict
         text = "&#4370&#4449&#4523"
 
         XCTAssertEqual(text.htmlUnescape(), "한")
@@ -344,6 +368,8 @@ class HTMLEntitiesTests: XCTestCase {
         catch {
             XCTFail("Wrong error thrown")
         }
+
+        XCTAssertEqual(try text.htmlUnescape(strict: false), "한")
     }
 
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {

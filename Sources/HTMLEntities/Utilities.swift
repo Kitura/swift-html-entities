@@ -119,7 +119,7 @@ extension UInt32 {
     }
 
     var isSafeASCII: Bool {
-        return self.isASCII && !self.isNonprinting && !self.isAttributeSyntax && !self.isTagSyntax
+        return self.isASCII && !self.isAttributeSyntax && !self.isTagSyntax
     }
 
     var isSemicolon: Bool {

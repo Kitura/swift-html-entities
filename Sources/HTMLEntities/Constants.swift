@@ -95,6 +95,20 @@ let specialNamedCharactersDecodeMap: [String: String] = [
     "ThickSpace;":"\u{205F}\u{200A}"
 ]
 
+// range of string lengths of legacy named characters
+// should be 2...6, but generate statically to avoid hardcoding numbers
+let legacyNamedCharactersLengthRange: CountableClosedRange<Int> = { () -> CountableClosedRange<Int> in
+    var min = Int.max, max = Int.min
+
+    for (name, _) in legacyNamedCharactersDecodeMap {
+        let length = name.characters.count
+        min = length < min ? length : min
+        max = length > max ? length : max
+    }
+
+    return min...max
+}()
+
 // named character references that may be parsed without an ending ;
 let legacyNamedCharactersDecodeMap: [String: Character] = [
     "Aacute":"\u{C1}","aacute":"\u{E1}","Acirc":"\u{C2}","acirc":"\u{E2}",
