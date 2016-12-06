@@ -17,56 +17,74 @@
 /// This String extension provides utility functions to convert strings to their
 /// HTML escaped equivalents and vice versa.
 public extension String {
+    /// Global HTML escape options
+    public struct HTMLEscapeOptions {
+        public static var allowUnsafeSymbols = false
+        public static var decimal = false
+        public static var encodeEverything = false
+        public static var useNamedReferences = false
+    }
+
     /// Return string as HTML escaped by replacing non-ASCII and unsafe characters
     /// with their numeric character escapes, or if such exists, their HTML named
     /// character reference equivalents. For example, this function turns
     /// `"<script>alert("abc")</script>"` into
     /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
+    /// View/set options globally via `String.HTMLEscapeOptions`.
+    /// - parameter allowUnsafeSymbols: Specifies if all ASCII characters should be skipped
+    /// when escaping text. *Optional*
     /// - parameter decimal: Specifies if decimal escapes should be used.
-    /// *Optional*. Defaults to `false`.
+    /// *Optional*
+    /// - paramter encodeEverything: Specifies if all characters should be escaped, even if
+    /// some are safe characters. *Optional*
     /// - parameter useNamedReferences: Specifies if named character references
-    /// should be used whenever possible. *Optional*. Defaults to `true`.
-    public func htmlEscape(decimal: Bool = false,
-                           useNamedReferences: Bool = true) -> String {
-        // result buffer
-        var str: String = ""
+    /// should be used whenever possible. *Optional*
+    public func htmlEscape(allowUnsafeSymbols: Bool = HTMLEscapeOptions.allowUnsafeSymbols,
+                           decimal: Bool = HTMLEscapeOptions.decimal,
+                           encodeEverything: Bool = HTMLEscapeOptions.encodeEverything,
+                           useNamedReferences: Bool = HTMLEscapeOptions.useNamedReferences)
+        -> String {
+            // result buffer
+            var str: String = ""
 
-        for c in self.characters {
-            let unicodes = String(c).unicodeScalars
+            for c in self.characters {
+                let unicodes = String(c).unicodeScalars
 
-            if unicodes.count == 1,
-                let unicode = unicodes.first?.value,
-                unicode.isSafeASCII {
-                // character consists of only one unicode,
-                // and is a safe ASCII character
-                str += String(c)
-            }
-            else if useNamedReferences,
-                let entity = namedCharactersEncodeMap[c] {
-                // character has a named character reference equivalent
-                str += "&" + entity
-            }
-            else {
-                // all other cases:
-                // deconstruct character into unicodes,
-                // then escape each unicode individually
-                for scalar in unicodes {
-                    let unicode = scalar.value
+                if !encodeEverything,
+                    unicodes.count == 1,
+                    let unicode = unicodes.first?.value,
+                    unicode.isASCII && allowUnsafeSymbols || unicode.isSafeASCII {
+                    // character consists of only one unicode,
+                    // and is a safe ASCII character,
+                    // or allowUnsafeSymbols is true
+                    str += String(c)
+                }
+                else if useNamedReferences,
+                    let entity = namedCharactersEncodeMap[c] {
+                    // character has a named character reference equivalent
+                    str += "&" + entity
+                }
+                else {
+                    // all other cases:
+                    // deconstruct character into unicodes,
+                    // then escape each unicode individually
+                    for scalar in unicodes {
+                        let unicode = scalar.value
 
-                    if unicode.isSafeASCII {
-                        str += String(scalar)
-                    }
-                    else {
-                        let codeStr = decimal ? String(unicode, radix: 10) :
-                            "x" + String(unicode, radix:16, uppercase: true)
+                        if !encodeEverything && unicode.isSafeASCII {
+                            str += String(scalar)
+                        }
+                        else {
+                            let codeStr = decimal ? String(unicode, radix: 10) :
+                                "x" + String(unicode, radix: 16, uppercase: true)
 
-                        str += "&#" + codeStr + ";"
+                            str += "&#" + codeStr + ";"
+                        }
                     }
                 }
             }
-        }
 
-        return str
+            return str
     }
 
     /// Return string as HTML unescaped by replacing HTML character references with their unicode
@@ -308,7 +326,7 @@ public extension String {
 
         return str
     }
-    
+
     /// Return string as HTML unescaped by replacing HTML character references with their unicode
     /// character equivalents.
     /// For example, this function turns
@@ -322,7 +340,7 @@ public extension String {
     }
 }
 
-private func decode(entity: String, entityPrefix: String, strict: Bool) throws -> String {
+fileprivate func decode(entity: String, entityPrefix: String, strict: Bool) throws -> String {
     switch entityPrefix {
     case "&#", "&#x", "&#X":
         // numeric character reference
@@ -406,11 +424,12 @@ private func decode(entity: String, entityPrefix: String, strict: Bool) throws -
             }
         }
 
-        // next, check if entity contains a legacy named character reference in its prefix
-        var offset = 2
+        for length in legacyNamedCharactersLengthRange {
+            guard length <= entity.characters.count else {
+                break;
+            }
 
-        while (offset <= entity.characters.count && offset <= 6) {
-            let upperIndex = entity.index(entity.startIndex, offsetBy: offset)
+            let upperIndex = entity.index(entity.startIndex, offsetBy: length)
             let reference = entity[entity.startIndex..<upperIndex]
 
             if let c = legacyNamedCharactersDecodeMap[reference] {
@@ -423,8 +442,6 @@ private func decode(entity: String, entityPrefix: String, strict: Bool) throws -
 
                 return String(c) + entity[upperIndex..<entity.endIndex]
             }
-
-            offset += 1
         }
 
         if strict && entity.hasSuffix(";") {
