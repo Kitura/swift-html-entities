@@ -426,7 +426,7 @@ fileprivate func decode(entity: String, entityPrefix: String, strict: Bool) thro
 
         for length in legacyNamedCharactersLengthRange {
             guard length <= entity.characters.count else {
-                break;
+                break
             }
 
             let upperIndex = entity.index(entity.startIndex, offsetBy: length)
