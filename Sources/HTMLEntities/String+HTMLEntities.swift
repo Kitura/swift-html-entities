@@ -19,9 +19,16 @@
 public extension String {
     /// Global HTML escape options
     public struct HTMLEscapeOptions {
+        /// Specifies if all ASCII characters should be skipped when escaping text
         public static var allowUnsafeSymbols = false
+
+        /// Specifies if decimal escapes should be used instead of hexadecimal escapes
         public static var decimal = false
+
+        /// Specifies if all characters should be escaped, even if some are safe characters
         public static var encodeEverything = false
+
+        /// Specifies if named character references should be used whenever possible
         public static var useNamedReferences = false
     }
 
@@ -33,8 +40,8 @@ public extension String {
     /// View/set options globally via `String.HTMLEscapeOptions`.
     /// - parameter allowUnsafeSymbols: Specifies if all ASCII characters should be skipped
     /// when escaping text. *Optional*
-    /// - parameter decimal: Specifies if decimal escapes should be used.
-    /// *Optional*
+    /// - parameter decimal: Specifies if decimal escapes should be used instead of
+    /// hexadecimal escapes. *Optional*
     /// - paramter encodeEverything: Specifies if all characters should be escaped, even if
     /// some are safe characters. *Optional*
     /// - parameter useNamedReferences: Specifies if named character references
@@ -457,7 +464,7 @@ fileprivate func decode(entity: String, entityPrefix: String, strict: Bool) thro
         return entityPrefix + entity
     default:
         // this should NEVER be hit in code execution
-        // if this block is reached, then decoder has faulty logic
+        // if this error is thrown, then decoder has faulty logic
         throw ParseError.IllegalArgument("Invaild entityPrefix: must be one of [\"&\", \"&#\", \"&#x\", \"&#X\"]")
     }
 }
