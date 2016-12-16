@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>HTMLEntities  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+
+
+    <a title="HTMLEntities  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          HTMLEntities Docs
+        </a>
+         (100% documented)
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/IBM-Swift/swift-html-entities">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">HTMLEntities Reference</a>
+      <img class="carat" src="img/carat.png" />
+      HTMLEntities  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/ParseError.html">ParseError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/String/HTMLEscapeOptions.html">– HTMLEscapeOptions</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <a href='#strong-htmlentities-strong' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h1 id='strong-htmlentities-strong'><strong>HTMLEntities</strong></h1>
+
+<p><a href="https://travis-ci.org/IBM-Swift/swift-html-entities"><img src="https://api.travis-ci.org/IBM-Swift/swift-html-entities.svg?branch=master" alt="Build Status - Master"></a>
+<img src="https://img.shields.io/badge/os-macOS-green.svg?style=flat" alt="macOS">
+<img src="https://img.shields.io/badge/os-linux-green.svg?style=flat" alt="Linux">
+<img src="https://img.shields.io/badge/license-Apache2-blue.svg?style=flat" alt="Apache 2"></p>
+<a href='#summary' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='summary'>Summary</h2>
+
+<p>Pure Swift HTML encode/decode utility tool for Swift 3.</p>
+
+<p>Now includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references <a href="https://www.w3.org/TR/html5/syntax.html#named-character-references">here</a>.</p>
+
+<p><code>HTMLEntities</code> can escape ALL non-ASCII characters as well as the characters <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>, <code>&quot;</code>, <code>’</code>, as these five characters are part of the HTML tag and HTML attribute syntaxes.</p>
+
+<p>In addition, <code>HTMLEntities</code> can unescape encoded HTML text that contains decimal, hexadecimal, or HTML5 named character references.</p>
+<a href='#features' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='features'>Features</h2>
+
+<ul>
+<li>Supports HTML5 named character references (<code>NegativeMediumSpace;</code> etc.)</li>
+<li>HTML5 spec-compliant; strict parse mode recognizes <a href="https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references">parse errors</a></li>
+<li>Supports decimal and hexadecimal escapes for all characters</li>
+<li>Simple to use as functions are added by way of extending the default <code>String</code> class</li>
+<li>Minimal dependencies; implementation is completely self-contained</li>
+</ul>
+<a href='#version-info' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='version-info'>Version Info</h2>
+
+<p>HTMLEntities 3.0 runs on Swift 3, on both macOS and Ubuntu Linux.</p>
+<a href='#usage' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='usage'>Usage</h2>
+<a href='#install-via-swift-package-manager-spm' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='install-via-swift-package-manager-spm'>Install via Swift Package Manager (SPM)</h3>
+
+<p>Add <code>HTMLEntities</code> to your <code>Package.swift</code>:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">PackageDescription</span>
+
+<span class="k">let</span> <span class="nv">package</span> <span class="o">=</span> <span class="kt">Package</span><span class="p">(</span>
+  <span class="nv">name</span><span class="p">:</span> <span class="s">"&lt;package-name&gt;"</span><span class="p">,</span>
+  <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
+    <span class="o">.</span><span class="kt">Package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/IBM-Swift/swift-html-entities.git"</span><span class="p">,</span> <span class="nv">majorVersion</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nv">minor</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+</code></pre>
+<a href='#in-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='in-code'>In code</h3>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="c1">// encode example</span>
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="s">"&lt;script&gt;alert(</span><span class="se">\"</span><span class="s">abc</span><span class="se">\"</span><span class="s">)&lt;/script&gt;"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">())</span>
+<span class="c1">// Prints "&amp;#x3C;script&amp;#x3E;alert(&amp;#x22;abc&amp;#x22;)&amp;#x3C;/script&amp;#x3E;"</span>
+
+<span class="c1">// decode example</span>
+<span class="k">let</span> <span class="nv">htmlencoded</span> <span class="o">=</span> <span class="s">"&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">htmlencoded</span><span class="o">.</span><span class="nf">htmlUnescape</span><span class="p">())</span>
+<span class="c1">// Prints "&lt;script&gt;alert(\"abc\")&lt;/script&gt;"</span>
+</code></pre>
+<a href='#advanced-options' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='advanced-options'>Advanced Options</h2>
+
+<p><code>HTMLEntities</code> supports various options when escaping and unescaping HTML characters.</p>
+<a href='#escape-options' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='escape-options'>Escape Options</h3>
+<a href='#code-allowunsafesymbols-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='code-allowunsafesymbols-code'><code>allowUnsafeSymbols</code></h4>
+
+<p>Defaults to <code>false</code>. Specifies if unsafe ASCII characters should be skipped or not.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="s">"&lt;p&gt;</span><span class="se">\"</span><span class="s">café</span><span class="se">\"</span><span class="s">&lt;/p&gt;"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">())</span>
+<span class="c1">// Prints "&amp;#x3C;p&amp;#x3E;&amp;#x22;caf&amp;#xE9;&amp;#x22;&amp;#x3C;/p&amp;#x3E;"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">allowUnsafeSymbols</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+<span class="c1">// Prints "&lt;p&gt;\"caf&amp;#xE9;\"&lt;/p&gt;"</span>
+
+</code></pre>
+<a href='#code-decimal-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='code-decimal-code'><code>decimal</code></h4>
+
+<p>Defaults to <code>false</code>. Specifies if decimal character escapes should be used instead of hexadecimal character escapes whenever numeric character escape is used (i.e., does not affect named character references escapes). The use of hexadecimal character escapes is recommended.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"한, 한, ế, ế, 🇺🇸"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">())</span>
+<span class="c1">// Prints "&amp;#x1112;&amp;#x1161;&amp;#x11AB;, &amp;#xD55C;, &amp;#x1EBF;, e&amp;#x302;&amp;#x301;, &amp;#x1F1FA;&amp;#x1F1F8;"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">decimal</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+<span class="c1">// Prints "&amp;#4370;&amp;#4449;&amp;#4523;, &amp;#54620;, &amp;#7871;, e&amp;#770;&amp;#769;, &amp;#127482;&amp;#127480;"</span>
+</code></pre>
+<a href='#code-encodeeverything-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='code-encodeeverything-code'><code>encodeEverything</code></h4>
+
+<p>Defaults to <code>false</code>. Specifies if all characters should be escaped, even if some characters are safe. If <code>true</code>, overrides the setting for <code>allowUnsafeSymbols</code>.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"A quick brown fox jumps over the lazy dog"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">())</span>
+<span class="c1">// Prints "A quick brown fox jumps over the lazy dog"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">encodeEverything</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+<span class="c1">// Prints "&amp;#x41;&amp;#x20;&amp;#x71;&amp;#x75;&amp;#x69;&amp;#x63;&amp;#x6B;&amp;#x20;&amp;#x62;&amp;#x72;&amp;#x6F;&amp;#x77;&amp;#x6E;&amp;#x20;&amp;#x66;&amp;#x6F;&amp;#x78;&amp;#x20;&amp;#x6A;&amp;#x75;&amp;#x6D;&amp;#x70;&amp;#x73;&amp;#x20;&amp;#x6F;&amp;#x76;&amp;#x65;&amp;#x72;&amp;#x20;&amp;#x74;&amp;#x68;&amp;#x65;&amp;#x20;&amp;#x6C;&amp;#x61;&amp;#x7A;&amp;#x79;&amp;#x20;&amp;#x64;&amp;#x6F;&amp;#x67;"</span>
+
+<span class="c1">// `encodeEverything` overrides `allowUnsafeSymbols`</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">allowUnsafeSymbols</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">encodeEverything</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+<span class="c1">// Prints "&amp;#x41;&amp;#x20;&amp;#x71;&amp;#x75;&amp;#x69;&amp;#x63;&amp;#x6B;&amp;#x20;&amp;#x62;&amp;#x72;&amp;#x6F;&amp;#x77;&amp;#x6E;&amp;#x20;&amp;#x66;&amp;#x6F;&amp;#x78;&amp;#x20;&amp;#x6A;&amp;#x75;&amp;#x6D;&amp;#x70;&amp;#x73;&amp;#x20;&amp;#x6F;&amp;#x76;&amp;#x65;&amp;#x72;&amp;#x20;&amp;#x74;&amp;#x68;&amp;#x65;&amp;#x20;&amp;#x6C;&amp;#x61;&amp;#x7A;&amp;#x79;&amp;#x20;&amp;#x64;&amp;#x6F;&amp;#x67;"</span>
+</code></pre>
+<a href='#code-usenamedreferences-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='code-usenamedreferences-code'><code>useNamedReferences</code></h4>
+
+<p>Defaults to <code>false</code>. Specifies if named character references should be used whenever possible. Set to <code>false</code> to always use numeric character references, i.e., for compatibility with older browsers that do not recognize named character references.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="s">"&lt;script&gt;alert(</span><span class="se">\"</span><span class="s">abc</span><span class="se">\"</span><span class="s">)&lt;/script&gt;"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">())</span>
+<span class="c1">// Prints “&amp;#x3C;script&amp;#x3E;alert(&amp;#x22;abc&amp;#x22;)&amp;#x3C;/script&amp;#x3E;”</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">useNamedReferences</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+<span class="c1">// Prints “&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;”</span>
+</code></pre>
+<a href='#set-escape-options-globally' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='set-escape-options-globally'>Set escape options globally</h4>
+
+<p>HTML escape options can be set globally so that you don&rsquo;t have to set them everytime you want to escape a string. The options are managed in the <code>String.HTMLEscapeOptions</code> struct.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="c1">// set `useNamedReferences` to `true` globally</span>
+<span class="kt">String</span><span class="o">.</span><span class="kt">HTMLEscapeOptions</span><span class="o">.</span><span class="n">useNamedReferences</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="s">"&lt;script&gt;alert(</span><span class="se">\"</span><span class="s">abc</span><span class="se">\"</span><span class="s">)&lt;/script&gt;"</span>
+
+<span class="c1">// Now, the default behavior of `htmlEscape()` is to use named character references</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">())</span>
+<span class="c1">// Prints “&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;”</span>
+
+<span class="c1">// And you can still go back to using numeric character references only</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">useNamedReferences</span><span class="p">:</span> <span class="kc">false</span><span class="p">))</span>
+<span class="c1">// Prints "&amp;#x3C;script&amp;#x3E;alert(&amp;#x22;abc&amp;#x22;)&amp;#x3C;/script&amp;#x3E;"</span>
+</code></pre>
+<a href='#unescape-options' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='unescape-options'>Unescape Options</h3>
+<a href='#code-strict-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='code-strict-code'><code>strict</code></h4>
+
+<p>Defaults to <code>false</code>. Specifies if HTML5 parse errors should be thrown or simply passed over. <strong>NOTE</strong>: <code>htmlUnescape()</code> is a throwing function if <code>strict</code> is used in call argument (no matter if it is set to <code>true</code> or <code>false</code>); <code>htmlUnescape()</code> is NOT a throwing function if no argument is provided.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">HTMLEntities</span>
+
+<span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"&amp;#4370&amp;#4449&amp;#4523"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="nf">htmlUnescape</span><span class="p">())</span>
+<span class="c1">// Prints "한"</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="k">try</span> <span class="n">text</span><span class="o">.</span><span class="nf">htmlUnescape</span><span class="p">(</span><span class="nv">strict</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+<span class="c1">// Throws a `ParseError.MissingSemicolon` instance</span>
+
+<span class="c1">// a throwing function because `strict` is passed in argument</span>
+<span class="c1">// but no error is thrown because `strict: false`</span>
+<span class="nf">print</span><span class="p">(</span><span class="k">try</span> <span class="n">text</span><span class="o">.</span><span class="nf">htmlUnescape</span><span class="p">(</span><span class="nv">strict</span><span class="p">:</span> <span class="kc">false</span><span class="p">))</span>
+<span class="c1">// Prints "한"</span>
+</code></pre>
+<a href='#acknowledgments' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='acknowledgments'>Acknowledgments</h2>
+
+<p><code>HTMLEntities</code> was designed to support some of the same options as <a href="https://github.com/mathiasbynens/he"><code>he</code></a>, a popular Javascript HTML encoder/decoder.</p>
+<a href='#license' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='license'>License</h2>
+
+<p>Apache 2.0</p>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2016-12-16)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

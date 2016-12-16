@@ -102,11 +102,6 @@ extension UInt32 {
         return isNumeral || 0x41...0x46 ~= self || 0x61...0x66 ~= self
     }
 
-    var isNonprinting: Bool {
-        // unicode values of [NUL-US] and DEL non-printing characters
-        return 0x0...0x1F ~= self || self == 0x7F
-    }
-
     var isNumeral: Bool {
         // unicode values of [0-9]
         return 0x30...0x39 ~= self
@@ -136,19 +131,6 @@ extension UInt32 {
     var isX: Bool {
         // unicode values of X and x
         return self == 0x58 || self == 0x78
-    }
-
-    func isValidEntityUnicode(for state: EntityParseState) -> Bool {
-        switch state {
-        case .Dec:
-            return self.isNumeral
-        case .Hex:
-            return self.isHexNumeral
-        case .Named:
-            return self.isAlphaNumeric
-        default:
-            return false
-        }
     }
 }
 

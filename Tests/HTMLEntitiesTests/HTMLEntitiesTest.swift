@@ -229,13 +229,16 @@ class HTMLEntitiesTests: XCTestCase {
     }
 
     func testEdgeCases() {
+        // empty string
         XCTAssertEqual("".htmlEscape(), "")
         XCTAssertEqual(try "".htmlUnescape(strict: true), "")
 
+        // alphanumeric only
         let simpleString = "abcdefghijklmnopqrstuvwxyz1234567890"
         XCTAssertEqual(simpleString.htmlEscape(), simpleString)
         XCTAssertEqual(try simpleString.htmlUnescape(strict: true), simpleString)
 
+        // extended grapheme cluster
         XCTAssertEqual("&#4370&#4449;&#4523".htmlUnescape(), "한")
 
         do {
@@ -249,6 +252,7 @@ class HTMLEntitiesTests: XCTestCase {
             XCTFail("Wrong error thrown")
         }
 
+        // some undefined named character references
         let badEntity = "&some &text; here &lt;script&gt; some more; text here;"
         XCTAssertEqual(badEntity.htmlUnescape(), "&some &text; here <script> some more; text here;")
 
@@ -263,6 +267,8 @@ class HTMLEntitiesTests: XCTestCase {
             XCTFail("Wrong error thrown")
         }
 
+        // example from section "Anything Else" in
+        // https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
         let legacyEmbedded = "I'm &notit; I tell you"
         XCTAssertEqual(legacyEmbedded.htmlUnescape(), "I'm ¬it; I tell you")
 
@@ -277,12 +283,34 @@ class HTMLEntitiesTests: XCTestCase {
             XCTFail("Wrong error thrown")
         }
 
+        // test various parse errors
         XCTAssertEqual(try "&&#x223E;&#x333;".htmlUnescape(strict: true), "&∾̳")
-
         XCTAssertEqual("&#&#x223E;&#x333;".htmlUnescape(), "&#∾̳")
 
         do {
             _ = try "&#&#x223E;&#x333;".htmlUnescape(strict: true)
+            XCTFail("Did not throw error")
+        }
+        catch ParseError.MalformedNumericReference {
+            XCTAssert(true)
+        }
+        catch {
+            XCTFail("Wrong error thrown")
+        }
+
+        do {
+            _ = try "&#abc".htmlUnescape(strict: true)
+            XCTFail("Did not throw error")
+        }
+        catch ParseError.MalformedNumericReference {
+            XCTAssert(true)
+        }
+        catch {
+            XCTFail("Wrong error thrown")
+        }
+
+        do {
+            _ = try "&#x".htmlUnescape(strict: true)
             XCTFail("Did not throw error")
         }
         catch ParseError.MalformedNumericReference {

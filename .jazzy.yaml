@@ -1,0 +1,14 @@
+module: HTMLEntities
+author: IBM
+github_url: https://github.com/IBM-Swift/swift-html-entities
+
+theme: fullwidth
+clean: true
+exclude: [Packages]
+
+readme: README.md
+
+skip_undocumented: false
+hide_documentation_coverage: false
+
+xcodebuild_arguments: [-project, HTMLEntities.xcodeproj, -target, HTMLEntities]

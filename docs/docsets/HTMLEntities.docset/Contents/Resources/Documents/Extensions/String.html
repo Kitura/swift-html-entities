@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>String Extension Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Extension/String" class="dashAnchor"></a>
+
+    <a title="String Extension Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          HTMLEntities Docs
+        </a>
+         (100% documented)
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/IBM-Swift/swift-html-entities">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">HTMLEntities Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      String Extension Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ParseError.html">ParseError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String/HTMLEscapeOptions.html">– HTMLEscapeOptions</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>String</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">struct</span> <span class="kt">String</span></code></pre>
+
+                </div>
+              </div>
+            
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:VE12HTMLEntitiesSS17HTMLEscapeOptions"></a>
+                    <a name="//apple_ref/swift/Struct/HTMLEscapeOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/s:VE12HTMLEntitiesSS17HTMLEscapeOptions">HTMLEscapeOptions</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Global HTML escape options</p>
+
+                        <a href="../Extensions/String/HTMLEscapeOptions.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">HTMLEscapeOptions</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FE12HTMLEntitiesSS10htmlEscapeFT18allowUnsafeSymbolsSb7decimalSb16encodeEverythingSb18useNamedReferencesSb_SS"></a>
+                    <a name="//apple_ref/swift/Method/htmlEscape(allowUnsafeSymbols:decimal:encodeEverything:useNamedReferences:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FE12HTMLEntitiesSS10htmlEscapeFT18allowUnsafeSymbolsSb7decimalSb16encodeEverythingSb18useNamedReferencesSb_SS">htmlEscape(allowUnsafeSymbols:decimal:encodeEverything:useNamedReferences:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return string as HTML escaped by replacing non-ASCII and unsafe characters
+with their numeric character escapes, or if such exists, their HTML named
+character reference equivalents. For example, this function turns
+<code>&quot;&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;&quot;</code> into
+<code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code>
+View/set options globally via <code><a href="../Extensions/String/HTMLEscapeOptions.html">String.HTMLEscapeOptions</a></code>.
+- parameter allowUnsafeSymbols: Specifies if all ASCII characters should be skipped
+when escaping text. <em>Optional</em>
+- parameter decimal: Specifies if decimal escapes should be used instead of
+hexadecimal escapes. <em>Optional</em>
+- paramter encodeEverything: Specifies if all characters should be escaped, even if
+some are safe characters. <em>Optional</em>
+- parameter useNamedReferences: Specifies if named character references
+should be used whenever possible. <em>Optional</em></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">allowUnsafeSymbols</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">allowUnsafeSymbols</span><span class="p">,</span>
+                           <span class="nv">decimal</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">decimal</span><span class="p">,</span>
+                           <span class="nv">encodeEverything</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">encodeEverything</span><span class="p">,</span>
+                           <span class="nv">useNamedReferences</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">useNamedReferences</span><span class="p">)</span>
+        <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnsafeSymbols</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if all ASCII characters should be skipped when escaping text. </p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>decimal</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if decimal escapes should be used instead of hexadecimal escapes. </p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>useNamedReferences</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if named character references should be used whenever possible. </p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FE12HTMLEntitiesSS12htmlUnescapeFzT6strictSb_SS"></a>
+                    <a name="//apple_ref/swift/Method/htmlUnescape(strict:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FE12HTMLEntitiesSS12htmlUnescapeFzT6strictSb_SS">htmlUnescape(strict:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return string as HTML unescaped by replacing HTML character references with their unicode
+character equivalents.
+For example, this function turns
+<code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code>
+into
+<code>&quot;&lt;script&gt;alert(\&quot;abc\&quot;)&lt;/script&gt;&quot;</code>
+- parameter strict: Specifies if escapes MUST always end with <code>;</code>.
+- throws: An error of type <code><a href="../Enums/ParseError.html">ParseError</a></code></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">htmlUnescape</span><span class="p">(</span><span class="nv">strict</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>strict</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if escapes MUST always end with <code>;</code>.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FE12HTMLEntitiesSS12htmlUnescapeFT_SS"></a>
+                    <a name="//apple_ref/swift/Method/htmlUnescape()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FE12HTMLEntitiesSS12htmlUnescapeFT_SS">htmlUnescape()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return string as HTML unescaped by replacing HTML character references with their unicode
+character equivalents.
+For example, this function turns
+<code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code>
+into
+<code>&quot;&lt;script&gt;alert(\&quot;abc\&quot;)&lt;/script&gt;&quot;</code>
+Equivalent to <code>htmlUnescape(strict: false)</code>, but does not throw parse errors.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">htmlUnescape</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2016-12-16)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
