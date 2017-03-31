@@ -1,4 +1,4 @@
-#**HTMLEntities**
+# HTMLEntities
 
 [![Build Status - Master](https://api.travis-ci.org/IBM-Swift/swift-html-entities.svg?branch=master)](https://travis-ci.org/IBM-Swift/swift-html-entities)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
