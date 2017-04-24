@@ -4,6 +4,7 @@
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
+[![codecov](https://codecov.io/gh/IBM-Swift/swift-html-entities/branch/master/graph/badge.svg)](https://codecov.io/gh/IBM-Swift/swift-html-entities)
 
 ## Summary
 Pure Swift HTML encode/decode utility tool for Swift 3.
@@ -161,7 +162,9 @@ print(html.htmlEscape(useNamedReferences: false))
 
 #### `strict`
 
-Defaults to `false`. Specifies if HTML5 parse errors should be thrown or simply passed over. **NOTE**: `htmlUnescape()` is a throwing function if `strict` is used in call argument (no matter if it is set to `true` or `false`); `htmlUnescape()` is NOT a throwing function if no argument is provided.
+Defaults to `false`. Specifies if HTML5 parse errors should be thrown or simply passed over.
+
+**Note**: `htmlUnescape()` is a throwing function if `strict` is used in call argument (no matter if it is set to `true` or `false`); `htmlUnescape()` is NOT a throwing function if no argument is provided.
 
 ```swift
 import HTMLEntities
