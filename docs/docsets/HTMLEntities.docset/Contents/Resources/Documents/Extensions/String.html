@@ -8,6 +8,9 @@
     <script src="../js/jquery.min.js" defer></script>
     <script src="../js/jazzy.js" defer></script>
     
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
 
@@ -21,6 +24,12 @@
           HTMLEntities Docs
         </a>
          (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
       </p>
     
         <p class="header-col header-col--secondary">
@@ -124,18 +133,15 @@
                       <div class="abstract">
                         <p>Return string as HTML escaped by replacing non-ASCII and unsafe characters
 with their numeric character escapes, or if such exists, their HTML named
-character reference equivalents. For example, this function turns
-<code>&quot;&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;&quot;</code> into
-<code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code>
-View/set options globally via <code><a href="../Extensions/String/HTMLEscapeOptions.html">String.HTMLEscapeOptions</a></code>.
-- parameter allowUnsafeSymbols: Specifies if all ASCII characters should be skipped
-when escaping text. <em>Optional</em>
-- parameter decimal: Specifies if decimal escapes should be used instead of
-hexadecimal escapes. <em>Optional</em>
-- paramter encodeEverything: Specifies if all characters should be escaped, even if
-some are safe characters. <em>Optional</em>
-- parameter useNamedReferences: Specifies if named character references
-should be used whenever possible. <em>Optional</em></p>
+character reference equivalents. For example, this function turns</p>
+
+<p><code>&quot;&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;&quot;</code></p>
+
+<p>into</p>
+
+<p><code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code></p>
+
+<p>You can view/change default option values globally via <code><a href="../Extensions/String/HTMLEscapeOptions.html">String.HTMLEscapeOptions</a></code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -162,8 +168,8 @@ should be used whenever possible. <em>Optional</em></p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Specifies if all ASCII characters should be skipped when escaping text. </p>
-
+                                  <p>Specifies if all ASCII characters should be skipped
+when escaping text. <em>Optional</em></p>
                                 </div>
                               </td>
                             </tr>
@@ -175,8 +181,21 @@ should be used whenever possible. <em>Optional</em></p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Specifies if decimal escapes should be used instead of hexadecimal escapes. </p>
-
+                                  <p>Specifies if decimal escapes should be used instead of
+hexadecimal escapes. <em>Optional</em></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>encodeEverything</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if all characters should be escaped, even if
+some are safe characters. <em>Optional</em></p>
                                 </div>
                               </td>
                             </tr>
@@ -188,8 +207,8 @@ should be used whenever possible. <em>Optional</em></p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Specifies if named character references should be used whenever possible. </p>
-
+                                  <p>Specifies if named character references
+should be used whenever possible. <em>Optional</em></p>
                                 </div>
                               </td>
                             </tr>
@@ -212,14 +231,19 @@ should be used whenever possible. <em>Optional</em></p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Return string as HTML unescaped by replacing HTML character references with their unicode
-character equivalents.
-For example, this function turns
-<code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code>
-into
-<code>&quot;&lt;script&gt;alert(\&quot;abc\&quot;)&lt;/script&gt;&quot;</code>
-- parameter strict: Specifies if escapes MUST always end with <code>;</code>.
-- throws: An error of type <code><a href="../Enums/ParseError.html">ParseError</a></code></p>
+                        <p>Return string as HTML unescaped by replacing HTML character references with their
+unicode character equivalents. For example, this function turns</p>
+
+<p><code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code></p>
+
+<p>into</p>
+
+<p><code>&quot;&lt;script&gt;alert(\&quot;abc\&quot;)&lt;/script&gt;&quot;</code></p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    (Only if <code>strict == true</code>) The first <code><a href="../Enums/ParseError.html">ParseError</a></code> encountered during parsing.
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -243,7 +267,6 @@ into
                               <td>
                                 <div>
                                   <p>Specifies if escapes MUST always end with <code>;</code>.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -266,13 +289,16 @@ into
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Return string as HTML unescaped by replacing HTML character references with their unicode
-character equivalents.
-For example, this function turns
-<code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code>
-into
-<code>&quot;&lt;script&gt;alert(\&quot;abc\&quot;)&lt;/script&gt;&quot;</code>
-Equivalent to <code>htmlUnescape(strict: false)</code>, but does not throw parse errors.</p>
+                        <p>Return string as HTML unescaped by replacing HTML character references with their
+unicode character equivalents. For example, this function turns</p>
+
+<p><code>&quot;&amp;lt;script&amp;gt;alert(&amp;quot;abc&amp;quot;)&amp;lt;/script&amp;gt;&quot;</code></p>
+
+<p>into</p>
+
+<p><code>&quot;&lt;script&gt;alert(\&quot;abc\&quot;)&lt;/script&gt;&quot;</code></p>
+
+<p>Equivalent to <code>htmlUnescape(strict: false)</code>, but does NOT throw parse error.</p>
 
                       </div>
                       <div class="declaration">
@@ -294,8 +320,8 @@ Equivalent to <code>htmlUnescape(strict: false)</code>, but does not throw parse
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2016-12-16)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-05-24)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
