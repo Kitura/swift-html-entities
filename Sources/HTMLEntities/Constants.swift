@@ -16,14 +16,16 @@
 
 // Linux toolchain requires Foundation to resolve `String` class's `hasSuffix()` function
 #if os(Linux)
-import Foundation
+    import Foundation
 #endif
 
-/// Replacement character U+FFFD
+// Replacement character U+FFFD
 let replacementCharacterAsUInt32: UInt32 = 0xFFFD
 
-/// Generated from
-/// https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+// Generated from
+// https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+// "Find the row with that number in the first column, and return a character token for
+// the Unicode character given in the second column of that row."
 let deprecatedNumericDecodeMap: [UInt32: UInt32] = [
     0x00:0xFFFD,0x80:0x20AC,0x82:0x201A,0x83:0x0192,0x84:0x201E,0x85:0x2026,0x86:0x2020,
     0x87:0x2021,0x88:0x02C6,0x89:0x2030,0x8A:0x0160,0x8B:0x2039,0x8C:0x0152,0x8E:0x017D,
@@ -31,25 +33,28 @@ let deprecatedNumericDecodeMap: [UInt32: UInt32] = [
     0x98:0x02DC,0x99:0x2122,0x9A:0x0161,0x9B:0x203A,0x9C:0x0153,0x9E:0x017E,0x9F:0x0178
 ]
 
-// map is faster lookup than array.indexOf
-let disallowedNumericReferences: [UInt32: Bool] = [
-    0x1:true,0x2:true,0x3:true,0x4:true,0x5:true,0x6:true,0x7:true,0x8:true,0xB:true,
-    0xD:true,0xE:true,0xF:true,0x10:true,0x11:true,0x12:true,0x13:true,0x14:true,
-    0x15:true,0x16:true,0x17:true,0x18:true,0x19:true,0x1A:true,0x1B:true,0x1C:true,
-    0x1D:true,0x1E:true,0x1F:true,0xFDD0:true,0xFDD1:true,0xFDD2:true,0xFDD3:true,
-    0xFDD4:true,0xFDD5:true,0xFDD6:true,0xFDD7:true,0xFDD8:true,0xFDD9:true,0xFDDA:true,
-    0xFDDB:true,0xFDDC:true,0xFDDD:true,0xFDDE:true,0xFDDF:true,0xFDE0:true,0xFDE1:true,
-    0xFDE2:true,0xFDE3:true,0xFDE4:true,0xFDE5:true,0xFDE6:true,0xFDE7:true,0xFDE8:true,
-    0xFDE9:true,0xFDEA:true,0xFDEB:true,0xFDEC:true,0xFDED:true,0xFDEE:true,0xFDEF:true,
-    0xFFFE:true,0xFFFF:true,0x1FFFE:true,0x1FFFF:true,0x2FFFE:true,0x2FFFF:true,0x3FFFE:true,
-    0x3FFFF:true,0x4FFFE:true,0x4FFFF:true,0x5FFFE:true,0x5FFFF:true,0x6FFFE:true,0x6FFFF:true,
-    0x7FFFE:true,0x7FFFF:true,0x8FFFE:true,0x8FFFF:true,0x9FFFE:true,0x9FFFF:true,0xAFFFE:true,
-    0xAFFFF:true,0xBFFFE:true,0xBFFFF:true,0xCFFFE:true,0xCFFFF:true,0xDFFFE:true,0xDFFFF:true,
-    0xEFFFE:true,0xEFFFF:true,0xFFFFE:true,0xFFFFF:true,0x10FFFE:true,0x10FFFF:true
+// Generated from
+// https://www.w3.org/TR/html5/syntax.html#tokenizing-character-references
+// "[I]f the number is in the range 0x0001 to 0x0008, 0x000D to 0x001F, 0x007F
+// to 0x009F, 0xFDD0 to 0xFDEF, or is one of 0x000B, 0xFFFE, 0xFFFF, 0x1FFFE,
+// 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE, 0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE,
+// 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF, 0x9FFFE,
+// 0x9FFFF, 0xAFFFE, 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE,
+// 0xDFFFF, 0xEFFFE, 0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, or 0x10FFFF, then
+// this is a parse error."
+let disallowedNumericReferences: Set<UInt32> = [
+    0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0xB,0xD,0xE,0xF,0x10,0x11,0x12,0x13,0x14,0x15,0x16,
+    0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,0xFDD0,0xFDD1,0xFDD2,0xFDD3,0xFDD4,
+    0xFDD5,0xFDD6,0xFDD7,0xFDD8,0xFDD9,0xFDDA,0xFDDB,0xFDDC,0xFDDD,0xFDDE,0xFDDF,0xFDE0,
+    0xFDE1,0xFDE2,0xFDE3,0xFDE4,0xFDE5,0xFDE6,0xFDE7,0xFDE8,0xFDE9,0xFDEA,0xFDEB,0xFDEC,
+    0xFDED,0xFDEE,0xFDEF,0xFFFE,0xFFFF,0x1FFFE,0x1FFFF,0x2FFFE,0x2FFFF,0x3FFFE,0x3FFFF,
+    0x4FFFE,0x4FFFF,0x5FFFE,0x5FFFF,0x6FFFE,0x6FFFF,0x7FFFE,0x7FFFF,0x8FFFE,0x8FFFF,
+    0x9FFFE,0x9FFFF,0xAFFFE,0xAFFFF,0xBFFFE,0xBFFFF,0xCFFFE,0xCFFFF,0xDFFFE,0xDFFFF,
+    0xEFFFE,0xEFFFF,0xFFFFE,0xFFFFF,0x10FFFE,0x10FFFF
 ]
 
-// only encode to named character references that end with ;
-// if multiple exists for a given character, i.e., 'AMP;' and 'amp;', pick the one
+// Only encode to named character references that end with ;
+// If multiple exists for a given character, i.e., 'AMP;' and 'amp;', pick the one
 // that is shorter and/or all lowercase
 let namedCharactersEncodeMap = namedCharactersDecodeMap.inverting() {
     existing, new in
@@ -88,15 +93,15 @@ let namedCharactersEncodeMap = namedCharactersDecodeMap.inverting() {
     return existing
 }
 
-// entities that map to more than one character
-// e.g., their decoded form spans more than one extended grapheme cluster
+// Entities that map to more than one character in Swift
+// E.g., their decoded form spans more than one extended grapheme cluster
 let specialNamedCharactersDecodeMap: [String: String] = [
     "fjlig;":"\u{66}\u{6A}",
     "ThickSpace;":"\u{205F}\u{200A}"
 ]
 
-// range of string lengths of legacy named characters
-// should be 2...6, but generate statically to avoid hardcoding numbers
+// Range of string lengths of legacy named characters
+// Should be 2...6, but generate statically to avoid hardcoding numbers
 let legacyNamedCharactersLengthRange: CountableClosedRange<Int> = { () -> CountableClosedRange<Int> in
     var min = Int.max, max = Int.min
 
@@ -109,7 +114,7 @@ let legacyNamedCharactersLengthRange: CountableClosedRange<Int> = { () -> Counta
     return min...max
 }()
 
-// named character references that may be parsed without an ending ;
+// Named character references that may be parsed without an ending ;
 let legacyNamedCharactersDecodeMap: [String: Character] = [
     "Aacute":"\u{C1}","aacute":"\u{E1}","Acirc":"\u{C2}","acirc":"\u{E2}",
     "acute":"\u{B4}","AElig":"\u{C6}","aelig":"\u{E6}","Agrave":"\u{C0}",
@@ -140,7 +145,7 @@ let legacyNamedCharactersDecodeMap: [String: Character] = [
     "yen":"\u{A5}","yuml":"\u{FF}"
 ]
 
-// split map into two halves; otherwise, segmentation fault when compiling
+// Split map into two halves; otherwise, segmentation fault when compiling
 let namedCharactersDecodeMap = namedCharactersDecodeMap1.updating(namedCharactersDecodeMap2)
 
 let namedCharactersDecodeMap1: [String: Character] = [
@@ -282,7 +287,10 @@ let namedCharactersDecodeMap1: [String: Character] = [
     "Fcy;":"\u{424}","fcy;":"\u{444}","female;":"\u{2640}","ffilig;":"\u{FB03}",
     "fflig;":"\u{FB00}","ffllig;":"\u{FB04}","Ffr;":"\u{1D509}","ffr;":"\u{1D523}",
     "filig;":"\u{FB01}","FilledSmallSquare;":"\u{25FC}","FilledVerySmallSquare;":"\u{25AA}",
+
+    // Skip "fjlig;" due to Swift not recognizing it as a single grapheme cluster
     // "fjlig;":"\u{66}\u{6A}",
+
     "flat;":"\u{266D}","fllig;":"\u{FB02}","fltns;":"\u{25B1}","fnof;":"\u{192}",
     "Fopf;":"\u{1D53D}","fopf;":"\u{1D557}","ForAll;":"\u{2200}","forall;":"\u{2200}",
     "fork;":"\u{22D4}","forkv;":"\u{2AD9}","Fouriertrf;":"\u{2131}","fpartint;":"\u{2A0D}",
@@ -609,7 +617,10 @@ let namedCharactersDecodeMap2: [String: Character] = [
     "there4;":"\u{2234}","Therefore;":"\u{2234}","therefore;":"\u{2234}","Theta;":"\u{398}",
     "theta;":"\u{3B8}","thetasym;":"\u{3D1}","thetav;":"\u{3D1}","thickapprox;":"\u{2248}",
     "thicksim;":"\u{223C}",
+
+    // Skip "ThickSpace;" due to Swift not recognizing it as a single grapheme cluster
     // "ThickSpace;":"\u{205F}\u{200A}",
+
     "thinsp;":"\u{2009}","ThinSpace;":"\u{2009}","thkap;":"\u{2248}","thksim;":"\u{223C}",
     "THORN;":"\u{DE}","thorn;":"\u{FE}","Tilde;":"\u{223C}","tilde;":"\u{2DC}",
     "TildeEqual;":"\u{2243}","TildeFullEqual;":"\u{2245}","TildeTilde;":"\u{2248}","times;":"\u{D7}",

@@ -32,19 +32,35 @@ public extension String {
         public static var useNamedReferences = false
     }
 
+    // Private enum used by the parser state machine
+    private enum EntityParseState {
+        case Dec
+        case Hex
+        case Invalid
+        case Named
+        case Number
+        case Unknown
+    }
+
     /// Return string as HTML escaped by replacing non-ASCII and unsafe characters
     /// with their numeric character escapes, or if such exists, their HTML named
     /// character reference equivalents. For example, this function turns
-    /// `"<script>alert("abc")</script>"` into
+    ///
+    /// `"<script>alert("abc")</script>"`
+    ///
+    /// into
+    ///
     /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
-    /// View/set options globally via `String.HTMLEscapeOptions`.
-    /// - parameter allowUnsafeSymbols: Specifies if all ASCII characters should be skipped
+    ///
+    /// You can view/change default option values globally via `String.HTMLEscapeOptions`.
+    ///
+    /// - Parameter allowUnsafeSymbols: Specifies if all ASCII characters should be skipped
     /// when escaping text. *Optional*
-    /// - parameter decimal: Specifies if decimal escapes should be used instead of
+    /// - Parameter decimal: Specifies if decimal escapes should be used instead of
     /// hexadecimal escapes. *Optional*
-    /// - paramter encodeEverything: Specifies if all characters should be escaped, even if
+    /// - Parameter encodeEverything: Specifies if all characters should be escaped, even if
     /// some are safe characters. *Optional*
-    /// - parameter useNamedReferences: Specifies if named character references
+    /// - Parameter useNamedReferences: Specifies if named character references
     /// should be used whenever possible. *Optional*
     public func htmlEscape(allowUnsafeSymbols: Bool = HTMLEscapeOptions.allowUnsafeSymbols,
                            decimal: Bool = HTMLEscapeOptions.decimal,
@@ -94,14 +110,17 @@ public extension String {
             return str
     }
 
-    /// Return string as HTML unescaped by replacing HTML character references with their unicode
-    /// character equivalents.
-    /// For example, this function turns
+    /// Return string as HTML unescaped by replacing HTML character references with their
+    /// unicode character equivalents. For example, this function turns
+    ///
     /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
+    ///
     /// into
+    ///
     /// `"<script>alert(\"abc\")</script>"`
-    /// - parameter strict: Specifies if escapes MUST always end with `;`.
-    /// - throws: An error of type `ParseError`
+    ///
+    /// - Parameter strict: Specifies if escapes MUST always end with `;`.
+    /// - Throws: (Only if `strict == true`) The first `ParseError` encountered during parsing.
     public func htmlUnescape(strict: Bool) throws -> String {
         // result buffer
         var str = ""
@@ -334,19 +353,23 @@ public extension String {
         return str
     }
 
-    /// Return string as HTML unescaped by replacing HTML character references with their unicode
-    /// character equivalents.
-    /// For example, this function turns
+    /// Return string as HTML unescaped by replacing HTML character references with their
+    /// unicode character equivalents. For example, this function turns
+    ///
     /// `"&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;"`
+    ///
     /// into
+    ///
     /// `"<script>alert(\"abc\")</script>"`
-    /// Equivalent to `htmlUnescape(strict: false)`, but does not throw parse errors.
+    ///
+    /// Equivalent to `htmlUnescape(strict: false)`, but does NOT throw parse error.
     public func htmlUnescape() -> String {
         // non-strict mode should never throw error
         return try! self.htmlUnescape(strict: false)
     }
 }
 
+// Utility function to decode a single entity
 fileprivate func decode(entity: String, entityPrefix: String, strict: Bool) throws -> String {
     switch entityPrefix {
     case "&#", "&#x", "&#X":

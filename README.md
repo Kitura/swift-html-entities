@@ -15,6 +15,8 @@ Now includes support for HTML5 named character references. You can find the list
 
 In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML5 named character references.
 
+API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.io/swift-html-entities/).
+
 ## Features
 
 * Supports HTML5 named character references (`NegativeMediumSpace;` etc.)

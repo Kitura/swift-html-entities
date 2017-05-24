@@ -167,7 +167,7 @@ class HTMLEntitiesTests: XCTestCase {
 
         // make sure the disallowed numeric references can be correctly unescaped in
         // nonstrict mode, and that the correct ParseError is thrown in strict mode
-        for unicode in disallowedNumericReferences.keys {
+        for unicode in disallowedNumericReferences {
             let unescaped = String(UnicodeScalar(unicode)!)
             var decEscaped = "&#" + String(unicode)
             var hexEscaped = "&#x" + String(unicode, radix: 16)
