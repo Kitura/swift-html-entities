@@ -9,11 +9,13 @@
 ## Summary
 Pure Swift HTML encode/decode utility tool for Swift 3.
 
-Now includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references [here](https://www.w3.org/TR/html5/syntax.html#named-character-references).
+Includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references [here](https://www.w3.org/TR/html5/syntax.html#named-character-references).
 
 `HTMLEntities` can escape ALL non-ASCII characters as well as the characters `<`, `>`, `&`, `"`, `’`, as these five characters are part of the HTML tag and HTML attribute syntaxes.
 
 In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal, hexadecimal, or HTML5 named character references.
+
+## API Documentation
 
 API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.io/swift-html-entities/).
 
@@ -27,11 +29,11 @@ API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.
 
 ## Version Info
 
-HTMLEntities 3.0 runs on Swift 3, on both macOS and Ubuntu Linux.
+`HTMLEntities` 3.0 requires Swift 3, on both macOS and Ubuntu Linux.
 
-## Usage
+## Installation
 
-### Install via Swift Package Manager (SPM)
+### Via Swift Package Manager
 
 Add `HTMLEntities` to your `Package.swift`:
 
@@ -46,7 +48,25 @@ let package = Package(
 )
 ```
 
-### In code
+### Via CocoaPods
+
+Add `HTMLEntities` to your `Podfile`:
+
+```
+target '<project-name>' do
+  pod 'HTMLEntities', :git => 'https://github.com/IBM-Swift/swift-html-entities.git'
+end
+```
+
+### Via Carthage
+
+Add `HTMLEntities` to your `Cartfile`:
+
+```
+github "IBM-Swift/swift-html-entities"
+```
+
+## Usage
 
 ```swift
 import HTMLEntities
@@ -139,7 +159,7 @@ print(html.htmlEscape(useNamedReferences: true))
 // Prints “&lt;script&gt;alert(&quot;abc&quot;)&lt;/script&gt;”
 ```
 
-#### Set escape options globally
+#### Set Escape Options Globally
 
 HTML escape options can be set globally so that you don't have to set them everytime you want to escape a string. The options are managed in the `String.HTMLEscapeOptions` struct.
 
