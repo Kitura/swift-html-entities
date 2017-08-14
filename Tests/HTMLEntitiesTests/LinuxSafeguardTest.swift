@@ -30,7 +30,7 @@
 
             // HTMLEntitiesTests
             linuxCount = HTMLEntitiesTests.allTests.count
-            darwinCount = Int(HTMLEntitiesTests.defaultTestSuite().testCaseCount)
+            darwinCount = Int(HTMLEntitiesTests.defaultTestSuite.testCaseCount)
             XCTAssertEqual(linuxCount, darwinCount, "\(darwinCount - linuxCount) tests are missing from HTMLEntitiesTests.allTests")
         }
     }
