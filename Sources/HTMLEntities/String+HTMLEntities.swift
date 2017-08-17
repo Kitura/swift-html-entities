@@ -171,11 +171,13 @@ public extension String {
                 else {
                     // false alarm, not a character reference
                     // move back to invalid state
-                    entityPrefix = ""
                     state = .Invalid
 
                     // move the consumed & and current unicode to result buffer
                     str += entityPrefix + unicodeAsString
+
+                    // clear entityPrefix buffer
+                    entityPrefix = ""
                 }
             case .Number:
                 // previously parsed &#
