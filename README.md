@@ -5,9 +5,10 @@
 ![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
 [![codecov](https://codecov.io/gh/IBM-Swift/swift-html-entities/branch/master/graph/badge.svg)](https://codecov.io/gh/IBM-Swift/swift-html-entities)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ## Summary
-Pure Swift HTML encode/decode utility tool for Swift 3.
+Pure Swift HTML encode/decode utility tool for Swift.
 
 Includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references [here](https://www.w3.org/TR/html5/syntax.html#named-character-references).
 
@@ -29,7 +30,7 @@ API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.
 
 ## Version Info
 
-`HTMLEntities` 3.0 requires Swift 3, on both macOS and Ubuntu Linux.
+Latest release of `HTMLEntities` requires Swift 3.
 
 ## Installation
 
