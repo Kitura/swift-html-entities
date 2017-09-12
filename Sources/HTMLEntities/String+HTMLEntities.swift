@@ -466,7 +466,7 @@ fileprivate func decode(entity: String, entityPrefix: String, strict: Bool) thro
             #if swift(>=3.2)
                 let reference = String(entity[..<upperIndex])
             #else
-                let reference = entity.substring(to: upperIndex)
+                let reference = entity[entity.startIndex..<upperIndex]
             #endif
 
             if let c = legacyNamedCharactersDecodeMap[reference] {
