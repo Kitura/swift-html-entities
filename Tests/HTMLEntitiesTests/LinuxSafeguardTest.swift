@@ -20,7 +20,9 @@
 //
 // Code adapted from https://oleb.net/blog/2017/03/keeping-xctest-in-sync/
 
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+// Test disabled on Swift 4 for now due to
+// https://bugs.swift.org/browse/SR-5684
+#if os(OSX) && !swift(>=3.2)
     import XCTest
 
     class LinuxSafeguardTest: XCTestCase {
