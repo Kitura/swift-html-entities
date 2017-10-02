@@ -70,7 +70,13 @@ public extension String {
             // result buffer
             var str: String = ""
 
-            for c in self.characters {
+            #if swift(>=3.2)
+                let characters = self
+            #else
+                let characters = self.characters
+            #endif
+
+            for c in characters {
                 let unicodes = String(c).unicodeScalars
 
                 if !encodeEverything,
@@ -457,7 +463,13 @@ fileprivate func decode(entity: String, entityPrefix: String, strict: Bool) thro
         }
 
         for length in legacyNamedCharactersLengthRange {
-            guard length <= entity.characters.count else {
+            #if swift(>=3.2)
+                let count = entity.count
+            #else
+                let count = entity.characters.count
+            #endif
+
+            guard length <= count else {
                 break
             }
 
