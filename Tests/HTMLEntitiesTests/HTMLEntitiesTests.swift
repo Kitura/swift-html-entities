@@ -33,11 +33,6 @@ let str3Escaped = "Jako efektivn&ecaron;j&scaron;&iacute; se n&aacute;m jev&iacu
 
 class HTMLEntitiesTests: XCTestCase {
     func testNamedCharacterReferences() {
-#if os(Linux)
-        XCTAssertEqual(namedCharactersEncodeMap.count, 1367)
-#else
-        XCTAssertEqual(namedCharactersEncodeMap.count, 1509)
-#endif
 
         XCTAssertEqual(specialNamedCharactersDecodeMap.count, 2)
         XCTAssertEqual(legacyNamedCharactersDecodeMap.count, 106)
