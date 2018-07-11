@@ -30,7 +30,7 @@ API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.
 
 ## Version Info
 
-Latest release of `HTMLEntities` runs on Swift 3 and 4. Tested on Swift 3.1.1 and Swift 4.0 toolchains.
+Latest release of `HTMLEntities` runs on Swift 3 and 4. Tested on Swift 3.1.1 and Swift 4.0+ toolchains.
 
 ## Installation
 
