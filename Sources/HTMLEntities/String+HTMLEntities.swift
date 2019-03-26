@@ -18,7 +18,7 @@
 /// HTML escaped equivalents and vice versa.
 public extension String {
     /// Global HTML escape options
-    public struct HTMLEscapeOptions {
+    struct HTMLEscapeOptions {
         /// Specifies if all ASCII characters should be skipped when escaping text
         public static var allowUnsafeSymbols = false
 
@@ -62,7 +62,7 @@ public extension String {
     /// some are safe characters. *Optional*
     /// - Parameter useNamedReferences: Specifies if named character references
     /// should be used whenever possible. *Optional*
-    public func htmlEscape(allowUnsafeSymbols: Bool = HTMLEscapeOptions.allowUnsafeSymbols,
+    func htmlEscape(allowUnsafeSymbols: Bool = HTMLEscapeOptions.allowUnsafeSymbols,
                            decimal: Bool = HTMLEscapeOptions.decimal,
                            encodeEverything: Bool = HTMLEscapeOptions.encodeEverything,
                            useNamedReferences: Bool = HTMLEscapeOptions.useNamedReferences)
@@ -127,7 +127,7 @@ public extension String {
     ///
     /// - Parameter strict: Specifies if escapes MUST always end with `;`.
     /// - Throws: (Only if `strict == true`) The first `ParseError` encountered during parsing.
-    public func htmlUnescape(strict: Bool) throws -> String {
+    func htmlUnescape(strict: Bool) throws -> String {
         // result buffer
         var str = ""
 
@@ -371,7 +371,7 @@ public extension String {
     /// `"<script>alert(\"abc\")</script>"`
     ///
     /// Equivalent to `htmlUnescape(strict: false)`, but does NOT throw parse error.
-    public func htmlUnescape() -> String {
+    func htmlUnescape() -> String {
         // non-strict mode should never throw error
         return try! self.htmlUnescape(strict: false)
     }
