@@ -30,28 +30,13 @@ API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.
 
 ## Version Info
 
-Latest release of `HTMLEntities` runs on Swift 3 and 4. Tested on Swift 3.1.1 and Swift 4.0+ toolchains.
+Latest release of `HTMLEntities` requires Swift 4.0 and higher.
 
 ## Installation
 
 ### Via Swift Package Manager
 
 Add `HTMLEntities` to your `Package.swift`:
-
-Swift 3:
-
-```swift
-import PackageDescription
-
-let package = Package(
-  name: "<package-name>",
-  dependencies: [
-    .Package(url: "https://github.com/IBM-Swift/swift-html-entities.git", majorVersion: 3, minor: 0)
-  ]
-)
-```
-
-Swift 4:
 
 ```swift
 import PackageDescription
@@ -60,7 +45,7 @@ let package = Package(
   name: "<package-name>",
   ...
   dependencies: [
-    .package(url: "https://github.com/IBM-Swift/swift-html-entities.git", .upToNextMajor(from: "3.0.0")
+    .package(url: "https://github.com/IBM-Swift/swift-html-entities.git", from: "3.0.0")
   ]
   // Also, make sure to add HTMLEntities to your package target's dependencies
 )
