@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "HTMLEntities"
-  s.version      = "3.0.10"
+  s.version      = "3.0.11"
   s.summary      = "HTML5 spec-compliant character encoder/decoder for Swift"
 
   # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-  Pure Swift HTML encode/decode utility tool for Swift 3.
+  Pure Swift HTML encode/decode utility tool for Swift 4 and Swift 5.
 
 Includes support for HTML5 named character references. You can find the list of all 2231 HTML5 named character references [here](https://www.w3.org/TR/html5/syntax.html#named-character-references).
 
