@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-// Linux toolchain requires Foundation to resolve `String` class's `hasSuffix()` function
-#if os(Linux)
+// Linux toolchain required Foundation to resolve `String` class's `hasSuffix()` function
+// before Swift 4.2.
+#if !swift(>=4.2) && os(Linux)
     import Foundation
 #endif
 
