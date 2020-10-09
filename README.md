@@ -18,7 +18,7 @@ In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal
 
 ## API Documentation
 
-API documentation for `HTMLEntities` is located [here](https://ibm-swift.github.io/swift-html-entities/).
+API documentation for `HTMLEntities` is located [here](https://kitura.github.io/swift-html-entities/).
 
 ## Features
 
@@ -45,7 +45,7 @@ let package = Package(
   name: "<package-name>",
   ...
   dependencies: [
-    .package(url: "https://github.com/IBM-Swift/swift-html-entities.git", from: "3.0.0")
+    .package(url: "https://github.com/Kitura/swift-html-entities.git", from: "3.0.0")
   ]
   // Also, make sure to add HTMLEntities to your package target's dependencies
 )
@@ -57,7 +57,7 @@ Add `HTMLEntities` to your `Podfile`:
 
 ```
 target '<project-name>' do
-  pod 'HTMLEntities', :git => 'https://github.com/IBM-Swift/swift-html-entities.git'
+  pod 'HTMLEntities', :git => 'https://github.com/Kitura/swift-html-entities.git'
 end
 ```
 
@@ -66,7 +66,7 @@ end
 Add `HTMLEntities` to your `Cartfile`:
 
 ```
-github "IBM-Swift/swift-html-entities"
+github "Kitura/swift-html-entities"
 ```
 
 ## Usage
@@ -197,7 +197,7 @@ import HTMLEntities
 let text = "&#4370&#4449&#4523"
 
 print(text.htmlUnescape())
-// Prints "한"
+// Prints "한"
 
 print(try text.htmlUnescape(strict: true))
 // Throws a `ParseError.MissingSemicolon` instance
@@ -205,7 +205,7 @@ print(try text.htmlUnescape(strict: true))
 // a throwing function because `strict` is passed in argument
 // but no error is thrown because `strict: false`
 print(try text.htmlUnescape(strict: false))
-// Prints "한"
+// Prints "한"
 ```
 
 ## Acknowledgments
