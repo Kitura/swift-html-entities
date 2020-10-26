@@ -117,7 +117,7 @@ Defaults to `false`. Specifies if decimal character escapes should be used inste
 ```swift
 import HTMLEntities
 
-let text = "한, 한, ế, ế, 🇺🇸"
+let text = "한, 한, ế, ế, 🇺🇸"
 
 print(text.htmlEscape())
 // Prints "&#x1112;&#x1161;&#x11AB;, &#xD55C;, &#x1EBF;, e&#x302;&#x301;, &#x1F1FA;&#x1F1F8;"
