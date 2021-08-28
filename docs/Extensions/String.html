@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          HTMLEntities Docs
+          HTMLEntities 4.0.0 Docs
         </a>
          (100% documented)
       </p>
@@ -33,7 +33,7 @@
       </p>
     
         <p class="header-col header-col--secondary">
-          <a class="header-link" href="https://github.com/IBM-Swift/swift-html-entities">
+          <a class="header-link" href="https://github.com/Kitura/swift-html-entities">
             <img class="header-icon" src="../img/gh.png"/>
             View on GitHub
           </a>
@@ -51,7 +51,7 @@
       <nav class="navigation">
         <ul class="nav-groups">
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/ParseError.html">ParseError</a>
@@ -74,15 +74,18 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>String</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">struct</span> <span class="kt">String</span></code></pre>
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">String</span></code></pre>
 
                 </div>
               </div>
-            
+            <p>This String extension provides utility functions to convert strings to their
+HTML escaped equivalents and vice versa.</p>
+
           </div>
         </section>
 
@@ -111,7 +114,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">HTMLEscapeOptions</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">HTMLEscapeOptions</span></code></pre>
 
                         </div>
                       </div>
@@ -121,9 +124,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:SS12HTMLEntitiesE10htmlEscapeSSSb18allowUnsafeSymbols_Sb7decimalSb16encodeEverythingSb18useNamedReferencestF"></a>
+                    <a name="/s:SS12HTMLEntitiesE10htmlEscape18allowUnsafeSymbols7decimal16encodeEverything18useNamedReferencesSSSb_S3btF"></a>
                     <a name="//apple_ref/swift/Method/htmlEscape(allowUnsafeSymbols:decimal:encodeEverything:useNamedReferences:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:SS12HTMLEntitiesE10htmlEscapeSSSb18allowUnsafeSymbols_Sb7decimalSb16encodeEverythingSb18useNamedReferencestF">htmlEscape(allowUnsafeSymbols:decimal:encodeEverything:useNamedReferences:)</a>
+                    <a class="token" href="#/s:SS12HTMLEntitiesE10htmlEscape18allowUnsafeSymbols7decimal16encodeEverything18useNamedReferencesSSSb_S3btF">htmlEscape(allowUnsafeSymbols:<wbr>decimal:<wbr>encodeEverything:<wbr>useNamedReferences:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -148,13 +151,72 @@ character reference equivalents. For example, this function turns</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">allowUnsafeSymbols</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">allowUnsafeSymbols</span><span class="p">,</span>
-                           <span class="nv">decimal</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">decimal</span><span class="p">,</span>
-                           <span class="nv">encodeEverything</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">encodeEverything</span><span class="p">,</span>
-                           <span class="nv">useNamedReferences</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">useNamedReferences</span><span class="p">)</span>
-        <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">htmlEscape</span><span class="p">(</span><span class="nv">allowUnsafeSymbols</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">allowUnsafeSymbols</span><span class="p">,</span>
+                       <span class="nv">decimal</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">decimal</span><span class="p">,</span>
+                       <span class="nv">encodeEverything</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">encodeEverything</span><span class="p">,</span>
+                       <span class="nv">useNamedReferences</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kt"><a href="../Extensions/String/HTMLEscapeOptions.html">HTMLEscapeOptions</a></span><span class="o">.</span><span class="n">useNamedReferences</span><span class="p">)</span>
+    <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnsafeSymbols</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if all ASCII characters should be skipped
+when escaping text. <em>Optional</em></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>decimal</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if decimal escapes should be used instead of
+hexadecimal escapes. <em>Optional</em></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>encodeEverything</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if all characters should be escaped, even if
+some are safe characters. <em>Optional</em></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>useNamedReferences</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if named character references
+should be used whenever possible. <em>Optional</em></p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -162,9 +224,9 @@ character reference equivalents. For example, this function turns</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:SS12HTMLEntitiesE12htmlUnescapeSSSb6strict_tKF"></a>
+                    <a name="/s:SS12HTMLEntitiesE12htmlUnescape6strictSSSb_tKF"></a>
                     <a name="//apple_ref/swift/Method/htmlUnescape(strict:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:SS12HTMLEntitiesE12htmlUnescapeSSSb6strict_tKF">htmlUnescape(strict:)</a>
+                    <a class="token" href="#/s:SS12HTMLEntitiesE12htmlUnescape6strictSSSb_tKF">htmlUnescape(strict:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -191,9 +253,28 @@ unicode character equivalents. For example, this function turns</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">htmlUnescape</span><span class="p">(</span><span class="nv">strict</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">htmlUnescape</span><span class="p">(</span><span class="nv">strict</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>strict</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if escapes MUST always end with <code>;</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -227,7 +308,7 @@ unicode character equivalents. For example, this function turns</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">htmlUnescape</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">htmlUnescape</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -242,8 +323,8 @@ unicode character equivalents. For example, this function turns</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://github.com/IBM-Swift/swift-html-entities" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-10-02)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2021 <a class="link" href="https://github.com/Kitura/swift-html-entities" target="_blank" rel="external">IBM and the Kitura project authors</a>. All rights reserved. (Last updated: 2021-08-28)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

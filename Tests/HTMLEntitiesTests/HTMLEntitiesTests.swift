@@ -278,7 +278,7 @@ class HTMLEntitiesTests: XCTestCase {
             XCTFail("Wrong error thrown")
         }
 
-        // unit test for fix to https://github.com/IBM-Swift/swift-html-entities/issues/29
+        // unit test for fix to https://github.com/Kitura/swift-html-entities/issues/29
         XCTAssertEqual("&+&#4370&#4449;&#4523".htmlUnescape(), "&+한")
 
         // test various parse errors
