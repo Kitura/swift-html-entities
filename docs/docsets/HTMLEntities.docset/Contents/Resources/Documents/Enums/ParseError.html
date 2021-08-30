@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ParseError Enum Reference</title>
+    <title>ParseError Enumeration Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -16,12 +16,12 @@
 
     <a name="//apple_ref/swift/Enum/ParseError" class="dashAnchor"></a>
 
-    <a title="ParseError Enum Reference"></a>
+    <a title="ParseError Enumeration Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          HTMLEntities Docs
+          HTMLEntities 4.0.0 Docs
         </a>
          (100% documented)
       </p>
@@ -33,7 +33,7 @@
       </p>
     
         <p class="header-col header-col--secondary">
-          <a class="header-link" href="https://github.com/IBM-Swift/swift-html-entities">
+          <a class="header-link" href="https://github.com/Kitura/swift-html-entities">
             <img class="header-icon" src="../img/gh.png"/>
             View on GitHub
           </a>
@@ -44,14 +44,14 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">HTMLEntities Reference</a>
       <img class="carat" src="../img/carat.png" />
-      ParseError Enum Reference
+      ParseError Enumeration Reference
     </p>
 
     <div class="content-wrapper">
       <nav class="navigation">
         <ul class="nav-groups">
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/ParseError.html">ParseError</a>
@@ -74,11 +74,12 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>ParseError</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ParseError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ParseError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
 
                 </div>
               </div>
@@ -97,9 +98,9 @@ for an explanation of the different parse errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO26DeprecatedNumericReferenceACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/DeprecatedNumericReference" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO26DeprecatedNumericReferenceACSScACmF">DeprecatedNumericReference</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO26DeprecatedNumericReferenceyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/DeprecatedNumericReference(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO26DeprecatedNumericReferenceyACSScACmF">DeprecatedNumericReference(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -107,31 +108,27 @@ for an explanation of the different parse errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>If that number is one of the numbers in the first column of the following
-table, then this is a parse error.</q></p>
+                        <p>&ldquo;If that number is one of the numbers in the first column of the following
+table, then this is a parse error.&rdquo;</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">DeprecatedNumericReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">DeprecatedNumericReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO26DisallowedNumericReferenceACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/DisallowedNumericReference" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO26DisallowedNumericReferenceACSScACmF">DisallowedNumericReference</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO26DisallowedNumericReferenceyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/DisallowedNumericReference(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO26DisallowedNumericReferenceyACSScACmF">DisallowedNumericReference(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -139,36 +136,32 @@ table, then this is a parse error.</q></p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>[I]f the number is in the range 0x0001 to 0x0008, 0x000D to 0x001F, 0x007F
+                        <p>&ldquo;[I]f the number is in the range 0x0001 to 0x0008, 0x000D to 0x001F, 0x007F
 to 0x009F, 0xFDD0 to 0xFDEF, or is one of 0x000B, 0xFFFE, 0xFFFF, 0x1FFFE,
 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE, 0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE,
 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF, 0x9FFFE,
 0x9FFFF, 0xAFFFE, 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE,
 0xDFFFF, 0xEFFFE, 0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, or 0x10FFFF, then
-this is a parse error.</q></p>
+this is a parse error.&rdquo;</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">DisallowedNumericReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">DisallowedNumericReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO15IllegalArgumentACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/IllegalArgument" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO15IllegalArgumentACSScACmF">IllegalArgument</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO15IllegalArgumentyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/IllegalArgument(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO15IllegalArgumentyACSScACmF">IllegalArgument(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -184,23 +177,19 @@ decoder has faulty logic</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">IllegalArgument</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">IllegalArgument</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO21InvalidNamedReferenceACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/InvalidNamedReference" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO21InvalidNamedReferenceACSScACmF">InvalidNamedReference</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO21InvalidNamedReferenceyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/InvalidNamedReference(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO21InvalidNamedReferenceyACSScACmF">InvalidNamedReference(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -208,32 +197,28 @@ decoder has faulty logic</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>[I]f the characters after the U+0026 AMPERSAND character (&) consist of
+                        <p>&ldquo;[I]f the characters after the U+0026 AMPERSAND character (&amp;) consist of
 a sequence of one or more alphanumeric ASCII characters followed by a
-U+003B SEMICOLON character (;), then this is a parse error.</q></p>
+U+003B SEMICOLON character (;), then this is a parse error.&rdquo;</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">InvalidNamedReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">InvalidNamedReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO25MalformedNumericReferenceACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/MalformedNumericReference" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO25MalformedNumericReferenceACSScACmF">MalformedNumericReference</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO25MalformedNumericReferenceyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/MalformedNumericReference(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO25MalformedNumericReferenceyACSScACmF">MalformedNumericReference(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -241,32 +226,28 @@ U+003B SEMICOLON character (;), then this is a parse error.</q></p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>If no characters match the range, then don&rsquo;t consume any characters
+                        <p>&ldquo;If no characters match the range, then don&rsquo;t consume any characters
 (and unconsume the U+0023 NUMBER SIGN character and, if appropriate,
-the X character). This is a parse error; nothing is returned.</q></p>
+the X character). This is a parse error; nothing is returned.&rdquo;</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">MalformedNumericReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">MalformedNumericReference</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO16MissingSemicolonACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/MissingSemicolon" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO16MissingSemicolonACSScACmF">MissingSemicolon</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO16MissingSemicolonyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/MissingSemicolon(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO16MissingSemicolonyACSScACmF">MissingSemicolon(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -274,31 +255,27 @@ the X character). This is a parse error; nothing is returned.</q></p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>[I]f the next character is a U+003B SEMICOLON, consume that too.
-If it isn&rsquo;t, there is a parse error.</q></p>
+                        <p>&ldquo;[I]f the next character is a U+003B SEMICOLON, consume that too.
+If it isn&rsquo;t, there is a parse error.&rdquo;</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">MissingSemicolon</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">MissingSemicolon</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12HTMLEntities10ParseErrorO24OutsideValidUnicodeRangeACSScACmF"></a>
-                    <a name="//apple_ref/swift/Element/OutsideValidUnicodeRange" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO24OutsideValidUnicodeRangeACSScACmF">OutsideValidUnicodeRange</a>
+                    <a name="/s:12HTMLEntities10ParseErrorO24OutsideValidUnicodeRangeyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/OutsideValidUnicodeRange(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12HTMLEntities10ParseErrorO24OutsideValidUnicodeRangeyACSScACmF">OutsideValidUnicodeRange(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -306,15 +283,15 @@ If it isn&rsquo;t, there is a parse error.</q></p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>[I]f the number is in the range 0xD800 to 0xDFFF or is greater
-than 0x10FFFF, then this is a parse error.</q></p>
+                        <p>&ldquo;[I]f the number is in the range 0xD800 to 0xDFFF or is greater
+than 0x10FFFF, then this is a parse error.&rdquo;</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">OutsideValidUnicodeRange</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kt">OutsideValidUnicodeRange</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -329,8 +306,8 @@ than 0x10FFFF, then this is a parse error.</q></p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://github.com/IBM-Swift/swift-html-entities" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-10-02)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2021 <a class="link" href="https://github.com/Kitura/swift-html-entities" target="_blank" rel="external">IBM and the Kitura project authors</a>. All rights reserved. (Last updated: 2021-08-28)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

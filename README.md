@@ -1,10 +1,10 @@
 # HTMLEntities
 
-[![Build Status - Master](https://api.travis-ci.org/IBM-Swift/swift-html-entities.svg?branch=master)](https://travis-ci.org/IBM-Swift/swift-html-entities)
+[![Build Status - Master](https://api.travis-ci.org/Kitura/swift-html-entities.svg?branch=master)](https://travis-ci.org/Kitura/swift-html-entities)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
-[![codecov](https://codecov.io/gh/IBM-Swift/swift-html-entities/branch/master/graph/badge.svg)](https://codecov.io/gh/IBM-Swift/swift-html-entities)
+[![codecov](https://codecov.io/gh/Kitura/swift-html-entities/branch/master/graph/badge.svg)](https://codecov.io/gh/Kitura/swift-html-entities)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ## Summary
