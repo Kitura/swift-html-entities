@@ -71,8 +71,8 @@ In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal
   # s.platform     = :ios, "5.0"
 
   #  When using multiple platforms
-  # s.ios.deployment_target = "5.0"
-  # s.osx.deployment_target = "10.7"
+  s.ios.deployment_target = "9.0"
+  s.osx.deployment_target = "10.10"
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"
 
