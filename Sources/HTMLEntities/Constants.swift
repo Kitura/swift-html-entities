@@ -300,7 +300,7 @@ let namedCharactersDecodeMap1: [String: Character] = [
     "filig;":"\u{FB01}","FilledSmallSquare;":"\u{25FC}","FilledVerySmallSquare;":"\u{25AA}",
 
     // Skip "fjlig;" due to Swift not recognizing it as a single grapheme cluster
-    // "fjlig;":Character(Unicode.Scalar(0x66}\u{6A)!),
+    // "fjlig;":"\u{66}\u{6A}",
 
     "flat;":"\u{266D}","fllig;":"\u{FB02}","fltns;":"\u{25B1}","fnof;":"\u{192}",
     "Fopf;":"\u{1D53D}","fopf;":"\u{1D557}","ForAll;":"\u{2200}","forall;":"\u{2200}",
@@ -630,7 +630,7 @@ let namedCharactersDecodeMap2: [String: Character] = [
     "thicksim;":"\u{223C}",
 
     // Skip "ThickSpace;" due to Swift not recognizing it as a single grapheme cluster
-    // "ThickSpace;":Character(Unicode.Scalar(0x205F}\u{200A)!),
+    // "ThickSpace;":"\u{205F}\u{200A}",
 
     "thinsp;":"\u{2009}","ThinSpace;":"\u{2009}","thkap;":"\u{2248}","thksim;":"\u{223C}",
     "THORN;":"\u{DE}","thorn;":"\u{FE}","Tilde;":"\u{223C}","tilde;":"\u{2DC}",
