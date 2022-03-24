@@ -75,6 +75,7 @@ In addition, `HTMLEntities` can unescape encoded HTML text that contains decimal
   s.osx.deployment_target = "10.10"
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"
+  s.swift_version = "5.2"
 
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
