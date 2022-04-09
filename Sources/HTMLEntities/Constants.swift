@@ -454,7 +454,7 @@ let namedCharactersDecodeMap2: [String: Character] = [
     "nlarr;":"\u{219A}","nldr;":"\u{2025}","nlE;":"\u{2266}\u{338}","nle;":"\u{2270}",
     "nLeftarrow;":"\u{21CD}","nleftarrow;":"\u{219A}","nLeftrightarrow;":"\u{21CE}","nleftrightarrow;":"\u{21AE}",
     "nleq;":"\u{2270}","nleqq;":"\u{2266}\u{338}","nleqslant;":"\u{2A7D}\u{338}","nles;":"\u{2A7D}\u{338}",
-    "nless;":"\u{226E}","nLl;":"\u{22D8}\u{338}","nlsim;":"\u{2274}","nLt;":"\u{226A}\u{338}",
+    "nless;":"\u{226E}","nLl;":"\u{22D8}\u{338}","nlsim;":"\u{2274}","nLt;":"\u{226A}\u{20D2}",
     "nlt;":"\u{226E}","nltri;":"\u{22EA}","nltrie;":"\u{22EC}","nLtv;":"\u{226A}\u{338}",
     "nmid;":"\u{2224}","NoBreak;":"\u{2060}","NonBreakingSpace;":"\u{A0}","Nopf;":"\u{2115}",
     "nopf;":"\u{1D55F}","Not;":"\u{2AEC}","not;":"\u{AC}","NotCongruent;":"\u{2262}",
