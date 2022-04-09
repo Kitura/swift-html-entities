@@ -17,6 +17,10 @@
 import XCTest
 @testable import HTMLEntities
 
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
+
 let replacementCharacterAsString = "\u{FFFD}"
 
 /// HTML snippet
@@ -398,6 +402,52 @@ class HTMLEntitiesTests: XCTestCase {
         XCTAssertEqual(try text.htmlUnescape(strict: false), "한")
     }
 
+    func testDecodeMaps() throws {
+        struct CodePointsAndCharacters: Codable {
+            var codepoints: [UInt32]
+            var characters: String
+        }
+
+        var entitiesData: Data?
+        var dataTaskError: Error?
+        let expectation = self.expectation(description: "Downloading entities.json")
+
+        let url = URL(string: "https://html.spec.whatwg.org/entities.json")!
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                dataTaskError = error
+            } else if let data = data {
+                entitiesData = data
+            }
+            expectation.fulfill()
+        }.resume()
+
+        self.wait(for: [expectation], timeout: 60)
+
+        if let dataTaskError = dataTaskError {
+            throw dataTaskError
+        }
+
+        guard let data = entitiesData else {
+            XCTFail("Failed to download entities.json")
+            return
+        }
+
+        let dict = try JSONDecoder().decode([String: CodePointsAndCharacters].self, from: data)
+
+        for (k, v) in specialNamedCharactersDecodeMap {
+            XCTAssertEqual(dict["&\(k)"]!.codepoints, v.unicodeScalars.map(\.value), k)
+        }
+
+        for (k, v) in legacyNamedCharactersDecodeMap {
+            XCTAssertEqual(dict["&\(k)"]!.codepoints, v.unicodeScalars.map(\.value), k)
+        }
+
+        for (k, v) in namedCharactersDecodeMap {
+            XCTAssertEqual(dict["&\(k)"]!.codepoints, v.unicodeScalars.map(\.value), k)
+        }
+    }
+
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {
         return [
             ("testNamedCharacterReferences", testNamedCharacterReferences),
@@ -406,7 +456,8 @@ class HTMLEntitiesTests: XCTestCase {
             ("testDecode", testDecode),
             ("testInvertibility", testInvertibility),
             ("testEdgeCases", testEdgeCases),
-            ("testREADMEExamples", testREADMEExamples)
+            ("testREADMEExamples", testREADMEExamples),
+            ("testDecodeMaps", testDecodeMaps)
         ]
     }
 }
