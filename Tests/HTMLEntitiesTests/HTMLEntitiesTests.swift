@@ -398,6 +398,36 @@ class HTMLEntitiesTests: XCTestCase {
         XCTAssertEqual(try text.htmlUnescape(strict: false), "한")
     }
 
+    func testDecodeMaps() throws {
+        struct CodePointsAndCharacters: Codable {
+            var codepoints: [UInt32]
+            var characters: String
+        }
+
+        #if swift(>=5.3)
+            let url = Bundle.module.url(forResource: "entities", withExtension: "json")!
+        #else
+            let url = URL(fileURLWithPath: #file)
+                .deletingLastPathComponent()
+                .appendingPathComponent("Resources")
+                .appendingPathComponent("entities.json")
+        #endif
+        let data = try Data(contentsOf: url)
+        let dict = try JSONDecoder().decode([String: CodePointsAndCharacters].self, from: data)
+
+        for (k, v) in specialNamedCharactersDecodeMap {
+            XCTAssertEqual(dict["&\(k)"]!.codepoints, v.unicodeScalars.map(\.value), k)
+        }
+
+        for (k, v) in legacyNamedCharactersDecodeMap {
+            XCTAssertEqual(dict["&\(k)"]!.codepoints, v.unicodeScalars.map(\.value), k)
+        }
+
+        for (k, v) in namedCharactersDecodeMap {
+            XCTAssertEqual(dict["&\(k)"]!.codepoints, v.unicodeScalars.map(\.value), k)
+        }
+    }
+
     static var allTests : [(String, (HTMLEntitiesTests) -> () throws -> Void)] {
         return [
             ("testNamedCharacterReferences", testNamedCharacterReferences),
@@ -406,7 +436,8 @@ class HTMLEntitiesTests: XCTestCase {
             ("testDecode", testDecode),
             ("testInvertibility", testInvertibility),
             ("testEdgeCases", testEdgeCases),
-            ("testREADMEExamples", testREADMEExamples)
+            ("testREADMEExamples", testREADMEExamples),
+            ("testDecodeMaps", testDecodeMaps)
         ]
     }
 }
