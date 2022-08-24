@@ -17,10 +17,6 @@
 import XCTest
 @testable import HTMLEntities
 
-#if canImport(FoundationNetworking)
-    import FoundationNetworking
-#endif
-
 let replacementCharacterAsString = "\u{FFFD}"
 
 /// HTML snippet
@@ -408,31 +404,15 @@ class HTMLEntitiesTests: XCTestCase {
             var characters: String
         }
 
-        var entitiesData: Data?
-        var dataTaskError: Error?
-        let expectation = self.expectation(description: "Downloading entities.json")
-
-        let url = URL(string: "https://html.spec.whatwg.org/entities.json")!
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                dataTaskError = error
-            } else if let data = data {
-                entitiesData = data
-            }
-            expectation.fulfill()
-        }.resume()
-
-        self.wait(for: [expectation], timeout: 60)
-
-        if let dataTaskError = dataTaskError {
-            throw dataTaskError
-        }
-
-        guard let data = entitiesData else {
-            XCTFail("Failed to download entities.json")
-            return
-        }
-
+        #if swift(>=5.3)
+            let url = Bundle.module.url(forResource: "entities", withExtension: "json")!
+        #else
+            let url = URL(fileURLWithPath: #file)
+                .deletingLastPathComponent()
+                .appendingPathComponent("Resources")
+                .appendingPathComponent("entities.json")
+        #endif
+        let data = try Data(contentsOf: url)
         let dict = try JSONDecoder().decode([String: CodePointsAndCharacters].self, from: data)
 
         for (k, v) in specialNamedCharactersDecodeMap {
